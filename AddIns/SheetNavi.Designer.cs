@@ -104,7 +104,6 @@ namespace AddIns
             this.Controls.Add(this.GrpButtons);
             this.Name = "SheetNavi";
             this.Size = new System.Drawing.Size(150, 241);
-            this.Load += new System.EventHandler(this.SheetNavi_Load);
             this.VisibleChanged += new System.EventHandler(this.SheetNavi_VisibleChanged);
             this.GrpButtons.ResumeLayout(false);
             this.ResumeLayout(false);

@@ -65,14 +65,13 @@ namespace AddIns
             }
         }
 
-        private int ActiveRefresh(int a)
+        public void RefreshUI()
         {
             BtnEnDisableChk();
             RefreshSheetList();
-            return 0;
         }
 
-        private void BtnEnDisableChk()
+         void BtnEnDisableChk()
         {
             if (Globals.ThisAddIn.GetNumOfNext() > 0)
                 BtnNext.Enabled = true;
@@ -83,11 +82,6 @@ namespace AddIns
                 BtnPrev.Enabled = true;
             else
                 BtnPrev.Enabled = false;
-        }
-
-        private void SheetNavi_Load(object sender, EventArgs e)
-        {
-            Globals.ThisAddIn.SetCallBack_ActiveRefresh(ActiveRefresh);
         }
 
         private void SheetNavi_VisibleChanged(object sender, EventArgs e)
