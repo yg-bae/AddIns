@@ -6,36 +6,36 @@ using System.Xml.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
 using Microsoft.Office.Tools.Excel;
+using CustomPane = Microsoft.Office.Tools.CustomTaskPane;
 
 namespace AddIns
 {
     public partial class ThisAddIn
     {
-        private Dictionary<string, Stack<string>> SheetHistoryDics_Prev = new Dictionary<string, Stack<string>>();
-        private Dictionary<string, Stack<string>> SheetHistoryDics_Next = new Dictionary<string, Stack<string>>();
+        private Dictionary<string, Stack<string>> SheetHistoryDict_Prev = new Dictionary<string, Stack<string>>();
+        private Dictionary<string, Stack<string>> SheetHistoryDict_Next = new Dictionary<string, Stack<string>>();
+        private Dictionary<string, CustomPane> SheetNavPaneiDict = new Dictionary<string, CustomPane>();
         private string GotoSheet = null;
         private string CurrentWb = null;
         private Func<int, int> pFuncRibonButtonEnDisable;
         private Func<int, int> pFuncSheetNaviActiveRefresh;
 
-        private Microsoft.Office.Tools.CustomTaskPane customPane;
-
         public void PrevSheet()
         {
-            if (SheetHistoryDics_Prev[CurrentWb].Count > 0)
+            if (SheetHistoryDict_Prev[CurrentWb].Count > 0)
             {
-                SheetHistoryDics_Next[CurrentWb].Push(this.Application.ActiveSheet.Name);
-                GotoSheet = SheetHistoryDics_Prev[CurrentWb].Pop();
+                SheetHistoryDict_Next[CurrentWb].Push(this.Application.ActiveSheet.Name);
+                GotoSheet = SheetHistoryDict_Prev[CurrentWb].Pop();
                 this.Application.ActiveWorkbook.Sheets[GotoSheet].Select();
             }
         }
 
         public void NextSheet()
         {
-            if (SheetHistoryDics_Next[CurrentWb].Count > 0)
+            if (SheetHistoryDict_Next[CurrentWb].Count > 0)
             {
-                SheetHistoryDics_Prev[CurrentWb].Push(this.Application.ActiveSheet.Name);
-                GotoSheet = SheetHistoryDics_Next[CurrentWb].Pop();
+                SheetHistoryDict_Prev[CurrentWb].Push(this.Application.ActiveSheet.Name);
+                GotoSheet = SheetHistoryDict_Next[CurrentWb].Pop();
                 this.Application.ActiveWorkbook.Sheets[GotoSheet].Select();
             }
         }
@@ -52,34 +52,45 @@ namespace AddIns
 
         public int GetNumOfNext()
         {
-            return SheetHistoryDics_Next[CurrentWb].Count;
+            return SheetHistoryDict_Next[CurrentWb].Count;
         }
 
         public int GetNumOfPrev()
         {
-            return SheetHistoryDics_Prev[CurrentWb].Count;
+            return SheetHistoryDict_Prev[CurrentWb].Count;
         }
 
         private void CreateNewSheetHistoryStack(Excel.Workbook wb)
         {
-            if (!SheetHistoryDics_Prev.ContainsKey(wb.Name))
+            if (!SheetHistoryDict_Prev.ContainsKey(wb.Name))
             {
                 Stack<string> SheetOpenHistoryStack_Prev = new Stack<string>();
-                SheetHistoryDics_Prev[wb.Name] = SheetOpenHistoryStack_Prev;
+                SheetHistoryDict_Prev[wb.Name] = SheetOpenHistoryStack_Prev;
             }
 
-            if (!SheetHistoryDics_Next.ContainsKey(wb.Name))
+            if (!SheetHistoryDict_Next.ContainsKey(wb.Name))
             {
                 Stack<string> SheetOpenHistoryStack_Next = new Stack<string>();
-                SheetHistoryDics_Next[wb.Name] = SheetOpenHistoryStack_Next;
+                SheetHistoryDict_Next[wb.Name] = SheetOpenHistoryStack_Next;
             }
 
             CurrentWb = wb.Name;
+        }
+        private void CreateNewSheetNaviPane()
+        {
+            string activeWb = Application.ActiveWorkbook.Name;
+            if (!SheetNavPaneiDict.ContainsKey(activeWb))
+            {
+                SheetNavi obj = new SheetNavi();
+                SheetNavPaneiDict[activeWb] = this.CustomTaskPanes.Add(obj, "Sheet Navigation");
+            }
+
         }
 
         private void WorkbookActivate(Excel.Workbook wb)
         {
             CreateNewSheetHistoryStack(wb);
+            CreateNewSheetNaviPane();
             pFuncRibonButtonEnDisable(0);
             pFuncSheetNaviActiveRefresh(0);
         }
@@ -87,11 +98,12 @@ namespace AddIns
         private void WorkSheetDeactivate(object sh)
         {
             CreateNewSheetHistoryStack(((Excel.Worksheet)sh).Parent);
+            CreateNewSheetNaviPane();
 
             if (string.IsNullOrEmpty(GotoSheet))
             {
-                SheetHistoryDics_Next[CurrentWb].Clear();
-                SheetHistoryDics_Prev[CurrentWb].Push(((Excel.Worksheet)sh).Name);
+                SheetHistoryDict_Next[CurrentWb].Clear();
+                SheetHistoryDict_Prev[CurrentWb].Push(((Excel.Worksheet)sh).Name);
             }
             GotoSheet = null;
             pFuncRibonButtonEnDisable(0);
@@ -100,20 +112,14 @@ namespace AddIns
         
         public void ShowSheetNavi()
         {
-            customPane.Visible = true;
-        }
-
-        private void CreateNewSheetNavi()
-        {
-            SheetNavi obj = new SheetNavi();
-            customPane = this.CustomTaskPanes.Add(obj, "Sheet Navigation");
+            SheetNavPaneiDict[Application.ActiveWorkbook.Name].Visible = true;
         }
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             this.Application.WorkbookActivate += WorkbookActivate;
             this.Application.SheetDeactivate += WorkSheetDeactivate;
-            CreateNewSheetNavi();
+            CreateNewSheetNaviPane();
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
