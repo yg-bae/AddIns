@@ -16,7 +16,7 @@ namespace AddIns
         private string GotoSheet = null;
         private string CurrentWb = null;
         private Func<int, int> pFuncRibonButtonEnDisable;
-        private Func<int, int> pFuncSheetNaviButtonEnDisable;
+        private Func<int, int> pFuncSheetNaviActiveRefresh;
 
         private Microsoft.Office.Tools.CustomTaskPane customPane;
 
@@ -45,9 +45,9 @@ namespace AddIns
             pFuncRibonButtonEnDisable = func;
         }
 
-        public void SetCallBack_SheetNaviButtonEnDisable(Func<int, int> func)
+        public void SetCallBack_ActiveRefresh(Func<int, int> func)
         {
-            pFuncSheetNaviButtonEnDisable = func;
+            pFuncSheetNaviActiveRefresh = func;
         }
 
         public int GetNumOfNext()
@@ -81,7 +81,7 @@ namespace AddIns
         {
             CreateNewSheetHistoryStack(wb);
             pFuncRibonButtonEnDisable(0);
-            pFuncSheetNaviButtonEnDisable(0);
+            pFuncSheetNaviActiveRefresh(0);
         }
 
         private void WorkSheetDeactivate(object sh)
@@ -95,7 +95,7 @@ namespace AddIns
             }
             GotoSheet = null;
             pFuncRibonButtonEnDisable(0);
-            pFuncSheetNaviButtonEnDisable(0);
+            pFuncSheetNaviActiveRefresh(0);
         }
         
         public void ShowSheetNavi()
