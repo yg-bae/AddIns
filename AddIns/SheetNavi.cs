@@ -15,16 +15,24 @@ namespace AddIns
 {
     public partial class SheetNavi : UserControl
     {
-        public SheetNavi()
+        private Workbook Wb;
+
+        public SheetNavi(Workbook wb)
         {
             InitializeComponent();
+            Wb = wb;
         }
 
         private void MenuList_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
-            Worksheet ws = wb.Worksheets[MenuList.SelectedItem];
-            ws.Activate();
+            try
+            {   // 두개의 workbook이 열려 있을 때 deactive된 workbook에 있는 SheetList를 double-click 하면 Error 발생함
+                Worksheet ws = Wb.Worksheets[MenuList.SelectedItem];
+                ws.Activate();
+            }
+            catch (System.Runtime.InteropServices.COMException)
+            {
+            }
         }
 
         private void BtnRefresh_Click(object sender, EventArgs e)
@@ -44,11 +52,16 @@ namespace AddIns
 
         private void RefreshSheetList()
         {
-            Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
             MenuList.Items.Clear();
-            foreach (Worksheet sht in wb.Worksheets)
+            try
             {
-                MenuList.Items.Add(sht.Name);
+                foreach (Worksheet sht in Wb.Worksheets)
+                {
+                    MenuList.Items.Add(sht.Name);
+                }
+            }
+            catch (System.Runtime.InteropServices.COMException)
+            {
             }
         }
 

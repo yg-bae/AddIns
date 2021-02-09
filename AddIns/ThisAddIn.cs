@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using Excel = Microsoft.Office.Interop.Excel;
-using Office = Microsoft.Office.Core;
 using Microsoft.Office.Tools.Excel;
+using Office = Microsoft.Office.Core;
+using Excel = Microsoft.Office.Interop.Excel;
+using Workbook = Microsoft.Office.Interop.Excel.Workbook;
+using Worksheet = Microsoft.Office.Interop.Excel.Worksheet;
+
 using CustomPane = Microsoft.Office.Tools.CustomTaskPane;
 
 namespace AddIns
@@ -78,11 +81,11 @@ namespace AddIns
         }
         private void CreateNewSheetNaviPane()
         {
-            string activeWb = Application.ActiveWorkbook.Name;
-            if (!SheetNavPaneiDict.ContainsKey(activeWb))
+            Workbook wb = Application.ActiveWorkbook;
+            if (!SheetNavPaneiDict.ContainsKey(wb.Name))
             {
-                SheetNavi obj = new SheetNavi();
-                SheetNavPaneiDict[activeWb] = this.CustomTaskPanes.Add(obj, "Sheet Navigation");
+                SheetNavi obj = new SheetNavi(wb);
+                SheetNavPaneiDict[wb.Name] = this.CustomTaskPanes.Add(obj, "Sheet Navigation");
             }
 
         }
@@ -98,7 +101,6 @@ namespace AddIns
         private void WorkSheetDeactivate(object sh)
         {
             CreateNewSheetHistoryStack(((Excel.Worksheet)sh).Parent);
-            CreateNewSheetNaviPane();
 
             if (string.IsNullOrEmpty(GotoSheet))
             {
@@ -109,7 +111,7 @@ namespace AddIns
             pFuncRibonButtonEnDisable(0);
             pFuncSheetNaviActiveRefresh(0);
         }
-        
+
         public void ShowSheetNavi()
         {
             SheetNavPaneiDict[Application.ActiveWorkbook.Name].Visible = true;
