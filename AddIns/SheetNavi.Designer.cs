@@ -33,7 +33,7 @@ namespace AddIns
             this.BtnNext = new System.Windows.Forms.Button();
             this.BtnPrev = new System.Windows.Forms.Button();
             this.BtnRefresh = new System.Windows.Forms.Button();
-            this.MenuList = new System.Windows.Forms.ListBox();
+            this.SheetList = new System.Windows.Forms.ListBox();
             this.GrpButtons.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -85,22 +85,23 @@ namespace AddIns
             this.BtnRefresh.UseVisualStyleBackColor = true;
             this.BtnRefresh.Click += new System.EventHandler(this.BtnRefresh_Click);
             // 
-            // MenuList
+            // SheetList
             // 
-            this.MenuList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MenuList.Font = new System.Drawing.Font("굴림체", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.MenuList.FormattingEnabled = true;
-            this.MenuList.Location = new System.Drawing.Point(0, 52);
-            this.MenuList.Name = "MenuList";
-            this.MenuList.Size = new System.Drawing.Size(150, 189);
-            this.MenuList.TabIndex = 1;
-            this.MenuList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.MenuList_MouseDoubleClick);
+            this.SheetList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SheetList.Font = new System.Drawing.Font("굴림체", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.SheetList.FormattingEnabled = true;
+            this.SheetList.Location = new System.Drawing.Point(0, 52);
+            this.SheetList.Name = "SheetList";
+            this.SheetList.Size = new System.Drawing.Size(150, 189);
+            this.SheetList.TabIndex = 1;
+            this.SheetList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.MenuList_MouseDoubleClick);
+            this.SheetList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.SheetList_MouseMove);
             // 
             // SheetNavi
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.MenuList);
+            this.Controls.Add(this.SheetList);
             this.Controls.Add(this.GrpButtons);
             this.Name = "SheetNavi";
             this.Size = new System.Drawing.Size(150, 241);
@@ -114,7 +115,7 @@ namespace AddIns
 
         private System.Windows.Forms.GroupBox GrpButtons;
         private System.Windows.Forms.Button BtnRefresh;
-        private System.Windows.Forms.ListBox MenuList;
+        private System.Windows.Forms.ListBox SheetList;
         private System.Windows.Forms.Button BtnNext;
         private System.Windows.Forms.Button BtnPrev;
     }

@@ -20,8 +20,22 @@ namespace AddIns
         private Dictionary<string, Stack<string>> SheetHistoryDict_Next = new Dictionary<string, Stack<string>>();
         private string GotoSheet = null;
 
-        public int NumOfNext => SheetHistoryDict_Next[Application.ActiveWorkbook.Name].Count;
-        public int NumOfPrev => SheetHistoryDict_Prev[Application.ActiveWorkbook.Name].Count;
+        public int NumOfNext
+        {
+            get
+            {
+                string wbName = Application.ActiveWorkbook.Name;
+                return (SheetHistoryDict_Next.ContainsKey(wbName)) ? SheetHistoryDict_Next[wbName].Count : 0;
+            }
+        }
+        public int NumOfPrev
+        {
+            get
+            {
+                string wbName = Application.ActiveWorkbook.Name;
+                return (SheetHistoryDict_Prev.ContainsKey(wbName)) ? SheetHistoryDict_Prev[wbName].Count : 0;
+            }
+        }
 
         public void PrevSheet()
         {
