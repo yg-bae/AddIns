@@ -19,26 +19,25 @@ namespace AddIns
         private Dictionary<string, Stack<string>> SheetHistoryDict_Prev = new Dictionary<string, Stack<string>>();
         private Dictionary<string, Stack<string>> SheetHistoryDict_Next = new Dictionary<string, Stack<string>>();
         private string GotoSheet = null;
-        private string CurrentWb = null;
 
-        public int NumOfNext => SheetHistoryDict_Next[CurrentWb].Count;
-        public int NumOfPrev => SheetHistoryDict_Prev[CurrentWb].Count;
+        public int NumOfNext => SheetHistoryDict_Next[Application.ActiveWorkbook.Name].Count;
+        public int NumOfPrev => SheetHistoryDict_Prev[Application.ActiveWorkbook.Name].Count;
 
         public void PrevSheet()
         {
-            if (SheetHistoryDict_Prev[CurrentWb].Count > 0)
+            if (SheetHistoryDict_Prev[Application.ActiveWorkbook.Name].Count > 0)
             {
-                SheetHistoryDict_Next[CurrentWb].Push(this.Application.ActiveSheet.Name);
-                GotoSheet = SheetHistoryDict_Prev[CurrentWb].Pop();
+                SheetHistoryDict_Next[Application.ActiveWorkbook.Name].Push(this.Application.ActiveSheet.Name);
+                GotoSheet = SheetHistoryDict_Prev[Application.ActiveWorkbook.Name].Pop();
                 this.Application.ActiveWorkbook.Sheets[GotoSheet].Select();
             }
         }
         public void NextSheet()
         {
-            if (SheetHistoryDict_Next[CurrentWb].Count > 0)
+            if (SheetHistoryDict_Next[Application.ActiveWorkbook.Name].Count > 0)
             {
-                SheetHistoryDict_Prev[CurrentWb].Push(this.Application.ActiveSheet.Name);
-                GotoSheet = SheetHistoryDict_Next[CurrentWb].Pop();
+                SheetHistoryDict_Prev[Application.ActiveWorkbook.Name].Push(this.Application.ActiveSheet.Name);
+                GotoSheet = SheetHistoryDict_Next[Application.ActiveWorkbook.Name].Pop();
                 this.Application.ActiveWorkbook.Sheets[GotoSheet].Select();
             }
         }
@@ -58,8 +57,6 @@ namespace AddIns
                 Stack<string> SheetOpenHistoryStack_Next = new Stack<string>();
                 SheetHistoryDict_Next[wb.Name] = SheetOpenHistoryStack_Next;
             }
-
-            CurrentWb = wb.Name;
         }
         #endregion 이전 / 다음시트 선택기
 
@@ -71,13 +68,14 @@ namespace AddIns
 
         public void ShowSheetNavi()
         {
+            CreateNewSheetNaviPane();
             SheetNaviPaneDict[Application.ActiveWorkbook.Name].Width = 250;
             SheetNaviPaneDict[Application.ActiveWorkbook.Name].Visible = true;
             SheetNaviObjDict[Application.ActiveWorkbook.Name].BtnEnDisableChk();
             SheetNaviObjDict[Application.ActiveWorkbook.Name].RefreshSheetList(); 
         }
 
-        private void CreateNewSheetNaviPane()
+        public void CreateNewSheetNaviPane()
         {
             Workbook wb = Application.ActiveWorkbook;
             if (!SheetNaviPaneDict.ContainsKey(wb.Name))
@@ -85,6 +83,7 @@ namespace AddIns
                 SheetNavi obj = new SheetNavi(wb);
                 SheetNaviObjDict[wb.Name] = obj;
                 SheetNaviPaneDict[wb.Name] = this.CustomTaskPanes.Add(obj, "Sheet Navigation");
+                SheetNaviObjDict[wb.Name].RefreshSheetList();
             }
         }
         #endregion Sheet Navigation
@@ -106,8 +105,8 @@ namespace AddIns
 
             if (string.IsNullOrEmpty(GotoSheet))
             {
-                SheetHistoryDict_Next[CurrentWb].Clear();
-                SheetHistoryDict_Prev[CurrentWb].Push(sht.Name);
+                SheetHistoryDict_Next[Application.ActiveWorkbook.Name].Clear();
+                SheetHistoryDict_Prev[Application.ActiveWorkbook.Name].Push(sht.Name);
             }
             GotoSheet = null;
             pFuncRibonButtonEnDisable(0);
@@ -122,7 +121,6 @@ namespace AddIns
         {
             this.Application.WorkbookActivate += WorkbookActivate;
             this.Application.SheetDeactivate += WorkSheetDeactivate;
-            CreateNewSheetNaviPane();
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
