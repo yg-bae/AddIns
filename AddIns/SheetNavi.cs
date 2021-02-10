@@ -50,7 +50,7 @@ namespace AddIns
             Globals.ThisAddIn.NextSheet();
         }
 
-        private void RefreshSheetList()
+        public void RefreshSheetList()
         {
             MenuList.Items.Clear();
             try
@@ -65,28 +65,25 @@ namespace AddIns
             }
         }
 
-        public void RefreshUI()
+        public void BtnEnDisableChk()
         {
-            BtnEnDisableChk();
-            RefreshSheetList();
-        }
-
-         void BtnEnDisableChk()
-        {
-            if (Globals.ThisAddIn.GetNumOfNext() > 0)
+            if (Globals.ThisAddIn.NumOfNext > 0)
                 BtnNext.Enabled = true;
             else
                 BtnNext.Enabled = false;
 
-            if (Globals.ThisAddIn.GetNumOfPrev() > 0)
+            if (Globals.ThisAddIn.NumOfPrev > 0)
                 BtnPrev.Enabled = true;
             else
                 BtnPrev.Enabled = false;
         }
 
-        private void SheetNavi_VisibleChanged(object sender, EventArgs e)
-        {
-            RefreshSheetList();
+        private void SheetNavi_Paint(object sender, PaintEventArgs e)
+        {/* 여러 event를 확인해 봤으나 본 control이 visible / in-visible / re-visible될 때 모두 발생하는 유일한 event가 Paint event임.
+          * 확인해본 event : SizeChanged, Load, VisibleChanged, Resize, Move, LocationChanged, Leave, Enter, EnabledChanged 
+          * 하지만 본 event에서 UI를 refresh할 경우(RefreshSheetList) 시트의 개수가 많으면 refresh하면서 깜박임이 심함 
+          * -> event를 통해서 refresh하는 것은 포기 */
+            //   RefreshSheetList();
         }
     }
 }

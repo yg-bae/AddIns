@@ -15,13 +15,14 @@ namespace AddIns
 {
     public partial class ThisAddIn
     {
+        #region 이전 / 다음시트 선택기
         private Dictionary<string, Stack<string>> SheetHistoryDict_Prev = new Dictionary<string, Stack<string>>();
         private Dictionary<string, Stack<string>> SheetHistoryDict_Next = new Dictionary<string, Stack<string>>();
-        private Dictionary<string, CustomPane> SheetNaviPaneDict = new Dictionary<string, CustomPane>();
-        private Dictionary<string, SheetNavi> SheetNaviObjDict = new Dictionary<string, SheetNavi>();
         private string GotoSheet = null;
         private string CurrentWb = null;
-        private Func<int, int> pFuncRibonButtonEnDisable;
+
+        public int NumOfNext => SheetHistoryDict_Next[CurrentWb].Count;
+        public int NumOfPrev => SheetHistoryDict_Prev[CurrentWb].Count;
 
         public void PrevSheet()
         {
@@ -32,7 +33,6 @@ namespace AddIns
                 this.Application.ActiveWorkbook.Sheets[GotoSheet].Select();
             }
         }
-
         public void NextSheet()
         {
             if (SheetHistoryDict_Next[CurrentWb].Count > 0)
@@ -43,22 +43,9 @@ namespace AddIns
             }
         }
 
-        public void SetCallBack_RibonButtonEnDisable(Func<int, int> func)
-        {
-            pFuncRibonButtonEnDisable = func;
-        }
+        public void SetCallBack_RibonButtonEnDisable(Func<int, int> func) => pFuncRibonButtonEnDisable = func;
 
-        public int GetNumOfNext()
-        {
-            return SheetHistoryDict_Next[CurrentWb].Count;
-        }
-
-        public int GetNumOfPrev()
-        {
-            return SheetHistoryDict_Prev[CurrentWb].Count;
-        }
-
-        private void CreateNewSheetHistoryStack(Excel.Workbook wb)
+        private void CreateNewSheetHistoryStack(Workbook wb)
         {
             if (!SheetHistoryDict_Prev.ContainsKey(wb.Name))
             {
@@ -74,6 +61,22 @@ namespace AddIns
 
             CurrentWb = wb.Name;
         }
+        #endregion 이전 / 다음시트 선택기
+
+
+        #region Sheet Navigation
+        private Dictionary<string, CustomPane> SheetNaviPaneDict = new Dictionary<string, CustomPane>();
+        private Dictionary<string, SheetNavi> SheetNaviObjDict = new Dictionary<string, SheetNavi>();
+        private Func<int, int> pFuncRibonButtonEnDisable;
+
+        public void ShowSheetNavi()
+        {
+            SheetNaviPaneDict[Application.ActiveWorkbook.Name].Width = 250;
+            SheetNaviPaneDict[Application.ActiveWorkbook.Name].Visible = true;
+            SheetNaviObjDict[Application.ActiveWorkbook.Name].BtnEnDisableChk();
+            SheetNaviObjDict[Application.ActiveWorkbook.Name].RefreshSheetList(); 
+        }
+
         private void CreateNewSheetNaviPane()
         {
             Workbook wb = Application.ActiveWorkbook;
@@ -84,13 +87,16 @@ namespace AddIns
                 SheetNaviPaneDict[wb.Name] = this.CustomTaskPanes.Add(obj, "Sheet Navigation");
             }
         }
+        #endregion Sheet Navigation
 
+
+        #region Event Function
         private void WorkbookActivate(Excel.Workbook wb)
         {
             CreateNewSheetHistoryStack(wb);
             CreateNewSheetNaviPane();
             pFuncRibonButtonEnDisable(0);
-            SheetNaviObjDict[wb.Name].RefreshUI();
+            SheetNaviObjDict[wb.Name].BtnEnDisableChk();
         }
 
         private void WorkSheetDeactivate(object sh)
@@ -104,13 +110,12 @@ namespace AddIns
                 SheetHistoryDict_Prev[CurrentWb].Push(sht.Name);
             }
             GotoSheet = null;
-            SheetNaviObjDict[sht.Parent.Name].RefreshUI();
             pFuncRibonButtonEnDisable(0);
-        }
 
-        public void ShowSheetNavi()
-        {
-            SheetNaviPaneDict[Application.ActiveWorkbook.Name].Visible = true;
+            if (SheetNaviObjDict.ContainsKey(Application.ActiveWorkbook.Name))
+            {
+                SheetNaviObjDict[Application.ActiveWorkbook.Name].BtnEnDisableChk();
+            }
         }
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
@@ -123,6 +128,8 @@ namespace AddIns
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
         }
+        #endregion Evetn Function
+
 
         #region VSTO에서 생성한 코드
 

@@ -88,8 +88,8 @@ namespace AddIns
             // MenuList
             // 
             this.MenuList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MenuList.Font = new System.Drawing.Font("굴림체", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.MenuList.FormattingEnabled = true;
-            this.MenuList.ItemHeight = 12;
             this.MenuList.Location = new System.Drawing.Point(0, 52);
             this.MenuList.Name = "MenuList";
             this.MenuList.Size = new System.Drawing.Size(150, 189);
@@ -104,7 +104,7 @@ namespace AddIns
             this.Controls.Add(this.GrpButtons);
             this.Name = "SheetNavi";
             this.Size = new System.Drawing.Size(150, 241);
-            this.VisibleChanged += new System.EventHandler(this.SheetNavi_VisibleChanged);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.SheetNavi_Paint);
             this.GrpButtons.ResumeLayout(false);
             this.ResumeLayout(false);
 

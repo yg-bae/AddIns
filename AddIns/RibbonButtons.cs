@@ -23,12 +23,12 @@ namespace AddIns
         }
         private int BtnEnDisableChk(int a)
         {
-            if (Globals.ThisAddIn.GetNumOfNext() > 0)
+            if (Globals.ThisAddIn.NumOfNext > 0)
                 NextBtn.Enabled = true;
             else
                 NextBtn.Enabled = false;
 
-            if (Globals.ThisAddIn.GetNumOfPrev() > 0)
+            if (Globals.ThisAddIn.NumOfPrev > 0)
                 PrevBtn.Enabled = true;
             else
                 PrevBtn.Enabled = false;
