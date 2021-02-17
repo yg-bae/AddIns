@@ -88,12 +88,14 @@ namespace AddIns
             // SheetList
             // 
             this.SheetList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SheetList.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.SheetList.Font = new System.Drawing.Font("굴림체", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.SheetList.FormattingEnabled = true;
             this.SheetList.Location = new System.Drawing.Point(0, 52);
             this.SheetList.Name = "SheetList";
             this.SheetList.Size = new System.Drawing.Size(150, 189);
             this.SheetList.TabIndex = 1;
+            this.SheetList.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.SheetList_DrawItem);
             this.SheetList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.MenuList_MouseDoubleClick);
             this.SheetList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.SheetList_MouseMove);
             // 

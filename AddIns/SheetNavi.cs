@@ -76,8 +76,11 @@ namespace AddIns
                     {
                         string key = IndexTblObj.DataBodyRange[i, idxSheetName].Value;
                         string value = IndexTblObj.DataBodyRange[i, idxNote].Value;
+                        
                         ToolTipDics[key] = value;
-                        SheetList.Items.Add(key);
+                        Color foreColor = System.Drawing.ColorTranslator.FromOle((int)((double)IndexTblObj.DataBodyRange[i, idxSheetName].Font.Color));
+                        Color backColor = System.Drawing.ColorTranslator.FromOle((int)((double)IndexTblObj.DataBodyRange[i, idxSheetName].Interior.Color));
+                        AddListBoxItem(key, backColor, foreColor, value);
                     }
                 }
             }
@@ -87,13 +90,18 @@ namespace AddIns
                 {
                     foreach (Worksheet sht in Wb.Worksheets)
                     {
-                        SheetList.Items.Add(sht.Name);
+                        AddListBoxItem(sht.Name, Color.Black, Color.White, "");
                     }
                 }
                 catch (System.Runtime.InteropServices.COMException)
                 {
                 }
             }
+        }
+
+        private void AddListBoxItem(string str, Color colorFore, Color colorBack, string toolTip)
+        {
+            SheetList.Items.Add(new Dictionary<string, object> { { "Text", str }, { "ForeColor", colorBack }, { "BackColor", colorFore }, { "ToolTip", toolTip } });
         }
 
         private int GetColumnIdx(ListObject obj, string colName)
@@ -154,25 +162,44 @@ namespace AddIns
             // If the row has changed since last moving the mouse:
             if (hoveredIndex != newHoveredIndex)
             {
-                if(toolTip != null) toolTip.Dispose();
-                toolTip = new ToolTip();
-                // Change the variable for the next time we move the mouse:
-                hoveredIndex = newHoveredIndex;
+                hoveredIndex = newHoveredIndex; // Change the variable for the next time we move the mouse:
 
-                // If over a row showing data (rather than blank space):
-                
-                if (hoveredIndex > -1)
+                if (toolTip != null) toolTip.Dispose();
+                toolTip = new ToolTip();
+
+                if (hoveredIndex > -1)  // If over a row showing data (rather than blank space):
                 {
-                    string dicKey = SheetList.Items[hoveredIndex].ToString();
-                    if((ToolTipDics != null) && (ToolTipDics.ContainsKey(dicKey) == true))
+                    Dictionary<string, object> dicKey = (SheetList.Items[hoveredIndex] as Dictionary<string, object>);
+                    if ((ToolTipDics != null) && (dicKey.ContainsKey("ToolTip") == true))
                     {
                         toolTip.InitialDelay = 1;
                         toolTip.Active = false;
-                        toolTip.SetToolTip(SheetList, ToolTipDics[dicKey]);
+                        //toolTip.SetToolTip(SheetList, ToolTipDics[dicKey]);
+                        toolTip.SetToolTip(SheetList, (string)dicKey["ToolTip"]);
                         toolTip.Active = true;
                     }
                 }
             }
+        }
+
+        private void SheetList_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            Dictionary<string, object> props = (SheetList.Items[e.Index] as Dictionary<string, object>);
+            SolidBrush backgroundBrush = new SolidBrush((props.ContainsKey("BackColor") && (((e.State & DrawItemState.Selected) != DrawItemState.Selected))) ? (Color)props["BackColor"] : e.BackColor);
+            SolidBrush foregroundBrush = new SolidBrush((props.ContainsKey("ForeColor") && (((e.State & DrawItemState.Selected) != DrawItemState.Selected))) ? (Color)props["ForeColor"] : e.ForeColor);
+
+            Font textFont = props.ContainsKey("Font") ? (Font)props["Font"] : e.Font;
+            string text = props.ContainsKey("Text") ? (string)props["Text"] : string.Empty;
+            RectangleF rectangle = new RectangleF(new PointF(e.Bounds.X, e.Bounds.Y), new SizeF(e.Bounds.Width, g.MeasureString(text, textFont).Height));
+
+            g.FillRectangle(backgroundBrush, rectangle);
+            g.DrawString(text, textFont, foregroundBrush, rectangle);
+            
+
+            backgroundBrush.Dispose();
+            foregroundBrush.Dispose();
+            g.Dispose();
         }
     }
 }
