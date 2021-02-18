@@ -14,6 +14,22 @@ using ListObject = Microsoft.Office.Interop.Excel.ListObject;
 
 namespace AddIns
 {
+    class SheetListItem
+    {
+        public string Item { get; set; }
+        public Color? ForeColor { get; set; }
+        public Color? BackColor { get; set; }
+        public string Note { get; set; }
+
+        public SheetListItem(string item, Color? foreColor = null, Color? backColor = null, string note = null)
+        {
+            Item = item;
+            ForeColor = foreColor;
+            BackColor = backColor;
+            Note = note;
+        }
+    };
+
     public partial class SheetNavi : UserControl
     {
         const string NAME_IDX_TBL = "T_Index";
@@ -22,7 +38,6 @@ namespace AddIns
 
         private Workbook Wb;
         private ListObject IndexTblObj;
-        private Dictionary<string, string> ToolTipDics;
 
         public SheetNavi(Workbook wb)
         {
@@ -32,10 +47,15 @@ namespace AddIns
 
         private void MenuList_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            // 두개의 workbook이 열려 있을 때 deactive된 workbook에 있는 SheetList를 double-click 하면 Error 발생함
             try
-            {   // 두개의 workbook이 열려 있을 때 deactive된 workbook에 있는 SheetList를 double-click 하면 Error 발생함
-                Worksheet ws = Wb.Worksheets[SheetList.SelectedItem];
-                ws.Activate();
+            {
+                SheetListItem selectedItem = SheetList.SelectedItem as SheetListItem;
+                if(selectedItem != null)
+                {
+                    Worksheet ws = Wb.Worksheets[selectedItem.Item];
+                    ws.Activate();
+                }
             }
             catch (System.Runtime.InteropServices.COMException)
             {
@@ -64,23 +84,19 @@ namespace AddIns
             IndexTblObj = GetTblObj(NAME_IDX_TBL);
             if (IndexTblObj != null)
             {
-                ToolTipDics = new Dictionary<string, string>();
                 int idxSheetName = GetColumnIdx(IndexTblObj, NAME_SHEETS);
                 int idxNote = GetColumnIdx(IndexTblObj, NAME_NOTE);
                 if((idxSheetName != -1) && (idxNote != -1))
                 {
                     Excel.ListColumn listSheetNames = IndexTblObj.ListColumns[idxSheetName];
-                    Excel.ListColumn listNotes = IndexTblObj.ListColumns[idxNote];
-
                     for(int i = 1; i <= listSheetNames.DataBodyRange.Rows.Count; i++)
                     {
-                        string key = IndexTblObj.DataBodyRange[i, idxSheetName].Value;
-                        string value = IndexTblObj.DataBodyRange[i, idxNote].Value;
+                        string sheetName = IndexTblObj.DataBodyRange[i, idxSheetName].Value;
+                        string toolTip = IndexTblObj.DataBodyRange[i, idxNote].Value;
                         
-                        ToolTipDics[key] = value;
                         Color foreColor = System.Drawing.ColorTranslator.FromOle((int)((double)IndexTblObj.DataBodyRange[i, idxSheetName].Font.Color));
                         Color backColor = System.Drawing.ColorTranslator.FromOle((int)((double)IndexTblObj.DataBodyRange[i, idxSheetName].Interior.Color));
-                        AddListBoxItem(key, backColor, foreColor, value);
+                        SheetList.Items.Add(new SheetListItem(sheetName, foreColor, backColor, toolTip));
                     }
                 }
             }
@@ -90,18 +106,13 @@ namespace AddIns
                 {
                     foreach (Worksheet sht in Wb.Worksheets)
                     {
-                        AddListBoxItem(sht.Name, Color.Black, Color.White, "");
+                        SheetList.Items.Add(new SheetListItem(sht.Name));
                     }
                 }
                 catch (System.Runtime.InteropServices.COMException)
                 {
                 }
             }
-        }
-
-        private void AddListBoxItem(string str, Color colorFore, Color colorBack, string toolTip)
-        {
-            SheetList.Items.Add(new Dictionary<string, object> { { "Text", str }, { "ForeColor", colorBack }, { "BackColor", colorFore }, { "ToolTip", toolTip } });
         }
 
         private int GetColumnIdx(ListObject obj, string colName)
@@ -112,6 +123,22 @@ namespace AddIns
                     return col.Index;
             }
             return -1;
+        }
+
+        private ListObject GetTblObj(string tblName)
+        {
+            ListObject tblObj = null;
+            foreach (Worksheet ws in Wb.Worksheets)
+            {
+                try
+                {
+                    tblObj = ws.ListObjects[tblName];
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return tblObj;
         }
 
         public void BtnEnDisableChk()
@@ -135,25 +162,8 @@ namespace AddIns
             //   RefreshSheetList();
         }
 
-        private ListObject GetTblObj(string tblName)
-        {
-            ListObject tblObj = null;
-            foreach (Worksheet ws in Wb.Worksheets)
-            {
-                try
-                {
-                    tblObj = ws.ListObjects[tblName];
-                }
-                catch (Exception)
-                {
-                }
-            }
-            return tblObj;
-        }
-
         int hoveredIndex = -1;  // Class variable to keep track of which row is currently selected:
         ToolTip toolTip;
-
         private void SheetList_MouseMove(object sender, MouseEventArgs e)
         {
             // See which row is currently under the mouse:
@@ -169,13 +179,12 @@ namespace AddIns
 
                 if (hoveredIndex > -1)  // If over a row showing data (rather than blank space):
                 {
-                    Dictionary<string, object> dicKey = (SheetList.Items[hoveredIndex] as Dictionary<string, object>);
-                    if ((ToolTipDics != null) && (dicKey.ContainsKey("ToolTip") == true))
+                    SheetListItem sheetListItem = SheetList.Items[hoveredIndex] as SheetListItem;
+                    if (sheetListItem.Note != null)
                     {
                         toolTip.InitialDelay = 1;
                         toolTip.Active = false;
-                        //toolTip.SetToolTip(SheetList, ToolTipDics[dicKey]);
-                        toolTip.SetToolTip(SheetList, (string)dicKey["ToolTip"]);
+                        toolTip.SetToolTip(SheetList, sheetListItem.Note);
                         toolTip.Active = true;
                     }
                 }
@@ -185,17 +194,15 @@ namespace AddIns
         private void SheetList_DrawItem(object sender, DrawItemEventArgs e)
         {
             Graphics g = e.Graphics;
-            Dictionary<string, object> props = (SheetList.Items[e.Index] as Dictionary<string, object>);
-            SolidBrush backgroundBrush = new SolidBrush((props.ContainsKey("BackColor") && (((e.State & DrawItemState.Selected) != DrawItemState.Selected))) ? (Color)props["BackColor"] : e.BackColor);
-            SolidBrush foregroundBrush = new SolidBrush((props.ContainsKey("ForeColor") && (((e.State & DrawItemState.Selected) != DrawItemState.Selected))) ? (Color)props["ForeColor"] : e.ForeColor);
-
-            Font textFont = props.ContainsKey("Font") ? (Font)props["Font"] : e.Font;
-            string text = props.ContainsKey("Text") ? (string)props["Text"] : string.Empty;
+            SheetListItem sheetListItem = SheetList.Items[e.Index] as SheetListItem;
+            SolidBrush foregroundBrush = new SolidBrush((((e.State & DrawItemState.Selected) != DrawItemState.Selected) && (sheetListItem.ForeColor != null)) ? (Color)sheetListItem.ForeColor : e.ForeColor);
+            SolidBrush backgroundBrush = new SolidBrush((((e.State & DrawItemState.Selected) != DrawItemState.Selected) && (sheetListItem.BackColor != null)) ? (Color)sheetListItem.BackColor : e.BackColor);
+            Font textFont = e.Font;
+            string text = sheetListItem.Item;
             RectangleF rectangle = new RectangleF(new PointF(e.Bounds.X, e.Bounds.Y), new SizeF(e.Bounds.Width, g.MeasureString(text, textFont).Height));
 
             g.FillRectangle(backgroundBrush, rectangle);
             g.DrawString(text, textFont, foregroundBrush, rectangle);
-            
 
             backgroundBrush.Dispose();
             foregroundBrush.Dispose();
