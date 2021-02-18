@@ -13,25 +13,24 @@ using Worksheet = Microsoft.Office.Interop.Excel.Worksheet;
 using ListObject = Microsoft.Office.Interop.Excel.ListObject;
 
 namespace AddIns
-{
-    class SheetListItem
+{   public partial class SheetNavi : UserControl
     {
-        public string Item { get; set; }
-        public Color? ForeColor { get; set; }
-        public Color? BackColor { get; set; }
-        public string Note { get; set; }
-
-        public SheetListItem(string item, Color? foreColor = null, Color? backColor = null, string note = null)
+        class SheetListItem
         {
-            Item = item;
-            ForeColor = foreColor;
-            BackColor = backColor;
-            Note = note;
-        }
-    };
+            public string Item { get; set; }
+            public Color? ForeColor { get; set; }
+            public Color? BackColor { get; set; }
+            public string Note { get; set; }
 
-    public partial class SheetNavi : UserControl
-    {
+            public SheetListItem(string item, Color? foreColor = null, Color? backColor = null, string note = null)
+            {
+                Item = item;
+                ForeColor = foreColor;
+                BackColor = backColor;
+                Note = note;
+            }
+        };
+
         const string NAME_IDX_TBL = "T_Index";
         const string NAME_SHEETS = "Sheet";
         const string NAME_NOTE = "Note";
@@ -43,8 +42,9 @@ namespace AddIns
         {
             InitializeComponent();
             Wb = wb;
+            ChkShowWhenWorkbookOpen.Checked = Properties.Settings.Default.ShowWhenWorkbookOpen;
         }
-
+       
         private void MenuList_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             // 두개의 workbook이 열려 있을 때 deactive된 workbook에 있는 SheetList를 double-click 하면 Error 발생함
@@ -61,12 +61,12 @@ namespace AddIns
             {
             }
         }
-
+        
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
             RefreshSheetList();
         }
-
+        
         private void BtnPrev_Click(object sender, EventArgs e)
         {
             Globals.ThisAddIn.PrevSheet();
@@ -207,6 +207,17 @@ namespace AddIns
             backgroundBrush.Dispose();
             foregroundBrush.Dispose();
             g.Dispose();
+        }
+
+        public void RefreshShowSheetNaviChkBox()
+        {
+            ChkShowWhenWorkbookOpen.Checked = Properties.Settings.Default.ShowWhenWorkbookOpen;
+        }
+
+        private void ChkShowWhenWorkbookOpen_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.ShowWhenWorkbookOpen = ChkShowWhenWorkbookOpen.Checked;
+            Properties.Settings.Default.Save();
         }
     }
 }

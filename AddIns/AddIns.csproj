@@ -200,13 +200,16 @@
       <DependentUpon>SheetNavi.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="AddIns_TemporaryKey.pfx" />
+    <None Include="app.config" />
+    <None Include="Properties\DataSources\AddIns.Properties.Settings.datasource" />
     <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="RibbonButtons.cs">
       <SubType>Component</SubType>
@@ -214,6 +217,7 @@
     <Compile Include="RibbonButtons.Designer.cs">
       <DependentUpon>RibbonButtons.cs</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="SheetNavi.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -30,6 +30,7 @@ namespace AddIns
         private void InitializeComponent()
         {
             this.GrpButtons = new System.Windows.Forms.GroupBox();
+            this.ChkShowWhenWorkbookOpen = new System.Windows.Forms.CheckBox();
             this.BtnNext = new System.Windows.Forms.Button();
             this.BtnPrev = new System.Windows.Forms.Button();
             this.BtnRefresh = new System.Windows.Forms.Button();
@@ -39,15 +40,27 @@ namespace AddIns
             // 
             // GrpButtons
             // 
+            this.GrpButtons.Controls.Add(this.ChkShowWhenWorkbookOpen);
             this.GrpButtons.Controls.Add(this.BtnNext);
             this.GrpButtons.Controls.Add(this.BtnPrev);
             this.GrpButtons.Controls.Add(this.BtnRefresh);
             this.GrpButtons.Dock = System.Windows.Forms.DockStyle.Top;
             this.GrpButtons.Location = new System.Drawing.Point(0, 0);
             this.GrpButtons.Name = "GrpButtons";
-            this.GrpButtons.Size = new System.Drawing.Size(150, 52);
+            this.GrpButtons.Size = new System.Drawing.Size(150, 75);
             this.GrpButtons.TabIndex = 0;
             this.GrpButtons.TabStop = false;
+            // 
+            // ChkShowWhenWorkbookOpen
+            // 
+            this.ChkShowWhenWorkbookOpen.AutoSize = true;
+            this.ChkShowWhenWorkbookOpen.Location = new System.Drawing.Point(6, 49);
+            this.ChkShowWhenWorkbookOpen.Name = "ChkShowWhenWorkbookOpen";
+            this.ChkShowWhenWorkbookOpen.Size = new System.Drawing.Size(140, 16);
+            this.ChkShowWhenWorkbookOpen.TabIndex = 3;
+            this.ChkShowWhenWorkbookOpen.Text = "파일열때 항상 보이기";
+            this.ChkShowWhenWorkbookOpen.UseVisualStyleBackColor = true;
+            this.ChkShowWhenWorkbookOpen.CheckedChanged += new System.EventHandler(this.ChkShowWhenWorkbookOpen_CheckedChanged);
             // 
             // BtnNext
             // 
@@ -91,9 +104,9 @@ namespace AddIns
             this.SheetList.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.SheetList.Font = new System.Drawing.Font("굴림체", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.SheetList.FormattingEnabled = true;
-            this.SheetList.Location = new System.Drawing.Point(0, 52);
+            this.SheetList.Location = new System.Drawing.Point(0, 75);
             this.SheetList.Name = "SheetList";
-            this.SheetList.Size = new System.Drawing.Size(150, 189);
+            this.SheetList.Size = new System.Drawing.Size(150, 166);
             this.SheetList.TabIndex = 1;
             this.SheetList.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.SheetList_DrawItem);
             this.SheetList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.MenuList_MouseDoubleClick);
@@ -109,6 +122,7 @@ namespace AddIns
             this.Size = new System.Drawing.Size(150, 241);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.SheetNavi_Paint);
             this.GrpButtons.ResumeLayout(false);
+            this.GrpButtons.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -120,5 +134,6 @@ namespace AddIns
         private System.Windows.Forms.ListBox SheetList;
         private System.Windows.Forms.Button BtnNext;
         private System.Windows.Forms.Button BtnPrev;
+        private System.Windows.Forms.CheckBox ChkShowWhenWorkbookOpen;
     }
 }

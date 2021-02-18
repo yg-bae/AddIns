@@ -110,6 +110,9 @@ namespace AddIns
             CreateNewSheetNaviPane();
             pFuncRibonButtonEnDisable(0);
             SheetNaviObjDict[wb.Name].BtnEnDisableChk();
+            if (Properties.Settings.Default.ShowWhenWorkbookOpen)
+                ShowSheetNavi();
+            SheetNaviObjDict[wb.Name].RefreshShowSheetNaviChkBox();
         }
 
         private void WorkSheetDeactivate(object sh)

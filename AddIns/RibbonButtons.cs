@@ -11,16 +11,20 @@ namespace AddIns
         private void RibbonButton_Load(object sender, RibbonUIEventArgs e)
         {
             Globals.ThisAddIn.SetCallBack_RibonButtonEnDisable(BtnEnDisableChk);
+            if (Properties.Settings.Default.ShowWhenWorkbookOpen)
+                Globals.ThisAddIn.ShowSheetNavi();
         }
 
         private void NextBtn_Click(object sender, RibbonControlEventArgs e)
         {
             Globals.ThisAddIn.NextSheet();
         }
+
         private void PrevBtn_Click(object sender, RibbonControlEventArgs e)
         {
             Globals.ThisAddIn.PrevSheet();
         }
+        
         private int BtnEnDisableChk(int a)
         {
             if (Globals.ThisAddIn.NumOfNext > 0)
