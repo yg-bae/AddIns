@@ -9,7 +9,7 @@ using System.Security;
 [assembly: AssemblyTitle("AddIns")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("LG Electronics")]
 [assembly: AssemblyProduct("AddIns")]
 [assembly: AssemblyCopyright("Copyright © Yonggyung Bae 2021")]
 [assembly: AssemblyTrademark("")]

@@ -28,18 +28,18 @@
     <AssemblyName>AddIns</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <DefineConstants>VSTO40</DefineConstants>
-    <IsWebBootstrapper>True</IsWebBootstrapper>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <IsWebBootstrapper>False</IsWebBootstrapper>
+    <BootstrapperEnabled>false</BootstrapperEnabled>
     <PublishUrl>게시\</PublishUrl>
-    <InstallUrl>https://github.com/yg-bae/AddIns/blob/master/AddIns/게시/</InstallUrl>
+    <InstallUrl />
     <TargetCulture>ko</TargetCulture>
-    <ApplicationVersion>1.0.0.12</ApplicationVersion>
+    <ApplicationVersion>1.0.0.13</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>days</UpdateIntervalUnits>
     <ProductName>AddIns</ProductName>
-    <PublisherName />
+    <PublisherName>Yonggyung Bae</PublisherName>
     <SupportUrl />
     <FriendlyName>AddIns</FriendlyName>
     <OfficeApplicationDescription />
