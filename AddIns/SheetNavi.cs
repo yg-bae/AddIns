@@ -17,14 +17,14 @@ namespace AddIns
     {
         class SheetListItem
         {
-            public string Item { get; set; }
+            public string Name { get; set; }
             public Color? ForeColor { get; set; }
             public Color? BackColor { get; set; }
             public string Note { get; set; }
 
             public SheetListItem(string item, Color? foreColor = null, Color? backColor = null, string note = null)
             {
-                Item = item;
+                Name = item;
                 ForeColor = foreColor;
                 BackColor = backColor;
                 Note = note;
@@ -44,29 +44,13 @@ namespace AddIns
             Wb = wb;
             ChkShowWhenWorkbookOpen.Checked = Properties.Settings.Default.ShowWhenWorkbookOpen;
         }
-       
-        private void MenuList_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            // 두개의 workbook이 열려 있을 때 deactive된 workbook에 있는 SheetList를 double-click 하면 Error 발생함
-            try
-            {
-                SheetListItem selectedItem = SheetList.SelectedItem as SheetListItem;
-                if(selectedItem != null)
-                {
-                    Worksheet ws = Wb.Worksheets[selectedItem.Item];
-                    ws.Activate();
-                }
-            }
-            catch (System.Runtime.InteropServices.COMException)
-            {
-            }
-        }
         
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
             RefreshSheetList();
         }
-        
+
+        #region 이전 / 이후 버튼
         private void BtnPrev_Click(object sender, EventArgs e)
         {
             Globals.ThisAddIn.PrevSheet();
@@ -75,6 +59,38 @@ namespace AddIns
         private void BtnNext_Click(object sender, EventArgs e)
         {
             Globals.ThisAddIn.NextSheet();
+        }
+
+        public void BtnEnDisableChk()
+        {
+            if (Globals.ThisAddIn.NumOfNext > 0)
+                BtnNext.Enabled = true;
+            else
+                BtnNext.Enabled = false;
+
+            if (Globals.ThisAddIn.NumOfPrev > 0)
+                BtnPrev.Enabled = true;
+            else
+                BtnPrev.Enabled = false;
+        }
+        #endregion 이전 / 이후 버튼
+
+        #region Sheet List
+        private void MenuList_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            // 두개의 workbook이 열려 있을 때 deactive된 workbook에 있는 SheetList를 double-click 하면 Error 발생함
+            try
+            {
+                SheetListItem selectedItem = SheetList.SelectedItem as SheetListItem;
+                if (selectedItem != null)
+                {
+                    Worksheet ws = Wb.Worksheets[selectedItem.Name];
+                    ws.Activate();
+                }
+            }
+            catch (System.Runtime.InteropServices.COMException)
+            {
+            }
         }
 
         public void RefreshSheetList()
@@ -115,43 +131,35 @@ namespace AddIns
             }
         }
 
-        private int GetColumnIdx(ListObject obj, string colName)
+        public void SelectItem(string itemName)
         {
-            foreach(Excel.ListColumn col in obj.ListColumns)
+            //myListBox.Items.Cast<EnquiryListItem>().Any(item => item.Text == ComboBox1.SelectedText.ToString())
+            foreach (SheetListItem item in SheetList.Items.Cast<SheetListItem>())
             {
-                if (col.Name == colName)
-                    return col.Index;
-            }
-            return -1;
-        }
-
-        private ListObject GetTblObj(string tblName)
-        {
-            ListObject tblObj = null;
-            foreach (Worksheet ws in Wb.Worksheets)
-            {
-                try
+                if(item.Name == itemName)
                 {
-                    tblObj = ws.ListObjects[tblName];
-                }
-                catch (Exception)
-                {
+                    SheetList.SelectedItem = item;
+                    break;
                 }
             }
-            return tblObj;
         }
 
-        public void BtnEnDisableChk()
+        private void SheetList_DrawItem(object sender, DrawItemEventArgs e)
         {
-            if (Globals.ThisAddIn.NumOfNext > 0)
-                BtnNext.Enabled = true;
-            else
-                BtnNext.Enabled = false;
+            Graphics g = e.Graphics;
+            SheetListItem sheetListItem = SheetList.Items[e.Index] as SheetListItem;
+            SolidBrush foregroundBrush = new SolidBrush((((e.State & DrawItemState.Selected) != DrawItemState.Selected) && (sheetListItem.ForeColor != null)) ? (Color)sheetListItem.ForeColor : e.ForeColor);
+            SolidBrush backgroundBrush = new SolidBrush((((e.State & DrawItemState.Selected) != DrawItemState.Selected) && (sheetListItem.BackColor != null)) ? (Color)sheetListItem.BackColor : e.BackColor);
+            Font textFont = e.Font;
+            string text = sheetListItem.Name;
+            RectangleF rectangle = new RectangleF(new PointF(e.Bounds.X, e.Bounds.Y), new SizeF(e.Bounds.Width, g.MeasureString(text, textFont).Height));
 
-            if (Globals.ThisAddIn.NumOfPrev > 0)
-                BtnPrev.Enabled = true;
-            else
-                BtnPrev.Enabled = false;
+            g.FillRectangle(backgroundBrush, rectangle);
+            g.DrawString(text, textFont, foregroundBrush, rectangle);
+
+            backgroundBrush.Dispose();
+            foregroundBrush.Dispose();
+            g.Dispose();
         }
 
         private void SheetNavi_Paint(object sender, PaintEventArgs e)
@@ -161,7 +169,9 @@ namespace AddIns
           * -> event를 통해서 refresh하는 것은 포기 */
             //   RefreshSheetList();
         }
+        #endregion Sheet List
 
+        #region Tool Tip Text
         int hoveredIndex = -1;  // Class variable to keep track of which row is currently selected:
         ToolTip toolTip;
         private void SheetList_MouseMove(object sender, MouseEventArgs e)
@@ -190,25 +200,9 @@ namespace AddIns
                 }
             }
         }
+        #endregion Tool Tip Text
 
-        private void SheetList_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            Graphics g = e.Graphics;
-            SheetListItem sheetListItem = SheetList.Items[e.Index] as SheetListItem;
-            SolidBrush foregroundBrush = new SolidBrush((((e.State & DrawItemState.Selected) != DrawItemState.Selected) && (sheetListItem.ForeColor != null)) ? (Color)sheetListItem.ForeColor : e.ForeColor);
-            SolidBrush backgroundBrush = new SolidBrush((((e.State & DrawItemState.Selected) != DrawItemState.Selected) && (sheetListItem.BackColor != null)) ? (Color)sheetListItem.BackColor : e.BackColor);
-            Font textFont = e.Font;
-            string text = sheetListItem.Item;
-            RectangleF rectangle = new RectangleF(new PointF(e.Bounds.X, e.Bounds.Y), new SizeF(e.Bounds.Width, g.MeasureString(text, textFont).Height));
-
-            g.FillRectangle(backgroundBrush, rectangle);
-            g.DrawString(text, textFont, foregroundBrush, rectangle);
-
-            backgroundBrush.Dispose();
-            foregroundBrush.Dispose();
-            g.Dispose();
-        }
-
+        #region 파일열때 항상 보이기
         public void RefreshShowSheetNaviChkBox()
         {
             ChkShowWhenWorkbookOpen.Checked = Properties.Settings.Default.ShowWhenWorkbookOpen;
@@ -219,5 +213,34 @@ namespace AddIns
             Properties.Settings.Default.ShowWhenWorkbookOpen = ChkShowWhenWorkbookOpen.Checked;
             Properties.Settings.Default.Save();
         }
+        #endregion 파일열때 항상 보이기
+
+        #region Common Library
+        private ListObject GetTblObj(string tblName)
+        {
+            ListObject tblObj = null;
+            foreach (Worksheet ws in Wb.Worksheets)
+            {
+                try
+                {
+                    tblObj = ws.ListObjects[tblName];
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return tblObj;
+        }
+
+        private int GetColumnIdx(ListObject obj, string colName)
+        {
+            foreach(Excel.ListColumn col in obj.ListColumns)
+            {
+                if (col.Name == colName)
+                    return col.Index;
+            }
+            return -1;
+        }
+        #endregion Common Library
     }
 }

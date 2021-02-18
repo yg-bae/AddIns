@@ -115,7 +115,14 @@ namespace AddIns
             SheetNaviObjDict[wb.Name].RefreshShowSheetNaviChkBox();
         }
 
-        private void WorkSheetDeactivate(object sh)
+        private void WorksheetActivate(object sh)
+        {
+            Worksheet sht = (Worksheet)sh;
+            Workbook wb = sht.Parent;
+            SheetNaviObjDict[wb.Name].SelectItem(sht.Name);
+        }
+
+        private void WorksheetDeactivate(object sh)
         {
             Worksheet sht = (Worksheet)sh;
             CreateNewSheetHistoryStack(sht.Parent);
@@ -137,7 +144,8 @@ namespace AddIns
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             this.Application.WorkbookActivate += WorkbookActivate;
-            this.Application.SheetDeactivate += WorkSheetDeactivate;
+            this.Application.SheetActivate += WorksheetActivate;
+            this.Application.SheetDeactivate += WorksheetDeactivate;
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
