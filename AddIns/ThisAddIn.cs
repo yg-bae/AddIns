@@ -86,7 +86,7 @@ namespace AddIns
             SheetNaviPaneDict[Application.ActiveWorkbook.Name].Width = 250;
             SheetNaviPaneDict[Application.ActiveWorkbook.Name].Visible = true;
             SheetNaviObjDict[Application.ActiveWorkbook.Name].BtnEnDisableChk();
-            SheetNaviObjDict[Application.ActiveWorkbook.Name].RefreshSheetList(); 
+            //SheetNaviObjDict[Application.ActiveWorkbook.Name].RefreshSheetList(); -> CreateNewSheetNaviPane에서 RefreshSheetList() 실행함, SheetNavi가 보여질 때 마다 refresh 할 필요는 없을것 같음
         }
 
         public void CreateNewSheetNaviPane()
