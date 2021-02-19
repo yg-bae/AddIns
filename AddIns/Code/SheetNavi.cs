@@ -60,12 +60,13 @@ namespace AddIns
 
         private Workbook Wb;
         private ListObject IndexTblObj;
+        private Code.FrmOption Option;
 
         public SheetNavi(Workbook wb)
         {
             InitializeComponent();
             Wb = wb;
-            ChkShowWhenWorkbookOpen.Checked = Properties.Settings.Default.ShowWhenWorkbookOpen;
+            Option = new Code.FrmOption();
         }
         
         private void BtnRefresh_Click(object sender, EventArgs e)
@@ -226,19 +227,6 @@ namespace AddIns
         }
         #endregion Tool Tip Text
 
-        #region 파일열때 항상 보이기
-        public void RefreshShowSheetNaviChkBox()
-        {
-            ChkShowWhenWorkbookOpen.Checked = Properties.Settings.Default.ShowWhenWorkbookOpen;
-        }
-
-        private void ChkShowWhenWorkbookOpen_CheckedChanged(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.ShowWhenWorkbookOpen = ChkShowWhenWorkbookOpen.Checked;
-            Properties.Settings.Default.Save();
-        }
-        #endregion 파일열때 항상 보이기
-
         #region Common Library
         private ListObject GetTblObj(string tblName)
         {
@@ -266,5 +254,14 @@ namespace AddIns
             return -1;
         }
         #endregion Common Library
+
+        private void BtnOption_Click(object sender, EventArgs e)
+        {
+            if(Option.ShowDialog() == DialogResult.OK)
+            {
+                Properties.Settings.Default.ShowWhenWorkbookOpen = Option.ChkAlwaysShow.Checked;
+                Properties.Settings.Default.Save();
+            }
+        }
     }
 }

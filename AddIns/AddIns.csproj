@@ -180,9 +180,18 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="Code\Option.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Code\Option.Designer.cs">
+      <DependentUpon>Option.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="Code\Option.resx">
+      <DependentUpon>Option.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -193,10 +202,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="RibbonButtons.resx">
+    <EmbeddedResource Include="Code\RibbonButtons.resx">
       <DependentUpon>RibbonButtons.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SheetNavi.resx">
+    <EmbeddedResource Include="Code\SheetNavi.resx">
       <DependentUpon>SheetNavi.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="AddIns_TemporaryKey.pfx" />
@@ -211,17 +220,17 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="RibbonButtons.cs">
+    <Compile Include="Code\RibbonButtons.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="RibbonButtons.Designer.cs">
+    <Compile Include="Code\RibbonButtons.Designer.cs">
       <DependentUpon>RibbonButtons.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Compile Include="SheetNavi.cs">
+    <Compile Include="Code\SheetNavi.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SheetNavi.Designer.cs">
+    <Compile Include="Code\SheetNavi.Designer.cs">
       <DependentUpon>SheetNavi.cs</DependentUpon>
     </Compile>
     <Compile Include="ThisAddIn.cs">
