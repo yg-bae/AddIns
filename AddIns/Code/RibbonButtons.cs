@@ -11,7 +11,7 @@ namespace AddIns
         private void RibbonButton_Load(object sender, RibbonUIEventArgs e)
         {
             Globals.ThisAddIn.SetCallBack_RibonButtonEnDisable(BtnEnDisableChk);
-            if (Properties.Settings.Default.ShowWhenWorkbookOpen)
+            if (Properties.Settings.Default.SheetNavi_AlwaysShow)
                 Globals.ThisAddIn.ShowSheetNavi();
         }
 

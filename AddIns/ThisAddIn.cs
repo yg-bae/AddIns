@@ -84,10 +84,8 @@ namespace AddIns
         {
             CreateNewSheetNaviPane();
             SheetNaviPaneDict[Application.ActiveWorkbook.Name].Width = 250;
-            SheetNaviPaneDict[Application.ActiveWorkbook.Name].Visible = true;
-            SheetNaviPaneDict[Application.ActiveWorkbook.Name].DockPosition = Office.MsoCTPDockPosition.msoCTPDockPositionLeft;
             SheetNaviObjDict[Application.ActiveWorkbook.Name].BtnEnDisableChk();
-            //SheetNaviObjDict[Application.ActiveWorkbook.Name].RefreshSheetList(); -> CreateNewSheetNaviPane에서 RefreshSheetList() 실행함, SheetNavi가 보여질 때 마다 refresh 할 필요는 없을것 같음
+            SheetNaviPaneDict[Application.ActiveWorkbook.Name].Visible = true;
         }
 
         public void CreateNewSheetNaviPane()
@@ -98,6 +96,7 @@ namespace AddIns
                 SheetNavi obj = new SheetNavi(wb);
                 SheetNaviObjDict[wb.Name] = obj;
                 SheetNaviPaneDict[wb.Name] = this.CustomTaskPanes.Add(obj, "Sheet Navigation");
+                SheetNaviPaneDict[wb.Name].DockPosition = Properties.Settings.Default.SheetNavi_DockPosition;
                 SheetNaviObjDict[wb.Name].RefreshSheetList();
             }
         }
@@ -111,7 +110,7 @@ namespace AddIns
             CreateNewSheetNaviPane();
             pFuncRibonButtonEnDisable(0);
             SheetNaviObjDict[wb.Name].BtnEnDisableChk();
-            if (Properties.Settings.Default.ShowWhenWorkbookOpen)
+            if (Properties.Settings.Default.SheetNavi_AlwaysShow)
                 ShowSheetNavi();
         }
 

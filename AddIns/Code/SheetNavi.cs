@@ -259,8 +259,6 @@ namespace AddIns
         {
             if(Option.ShowDialog() == DialogResult.OK)
             {
-                Properties.Settings.Default.ShowWhenWorkbookOpen = Option.ChkAlwaysShow.Checked;
-                Properties.Settings.Default.Save();
             }
         }
     }

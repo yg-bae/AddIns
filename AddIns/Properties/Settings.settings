@@ -2,8 +2,11 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AddIns.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="ShowWhenWorkbookOpen" Type="System.Boolean" Scope="User">
+    <Setting Name="SheetNavi_AlwaysShow" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SheetNavi_DockPosition" Type="Microsoft.Office.Core.MsoCTPDockPosition" Scope="User">
+      <Value Profile="(Default)">msoCTPDockPositionLeft</Value>
     </Setting>
   </Settings>
 </SettingsFile>

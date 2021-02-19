@@ -26,12 +26,24 @@ namespace AddIns.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ShowWhenWorkbookOpen {
+        public bool SheetNavi_AlwaysShow {
             get {
-                return ((bool)(this["ShowWhenWorkbookOpen"]));
+                return ((bool)(this["SheetNavi_AlwaysShow"]));
             }
             set {
-                this["ShowWhenWorkbookOpen"] = value;
+                this["SheetNavi_AlwaysShow"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("msoCTPDockPositionLeft")]
+        public global::Microsoft.Office.Core.MsoCTPDockPosition SheetNavi_DockPosition {
+            get {
+                return ((global::Microsoft.Office.Core.MsoCTPDockPosition)(this["SheetNavi_DockPosition"]));
+            }
+            set {
+                this["SheetNavi_DockPosition"] = value;
             }
         }
     }
