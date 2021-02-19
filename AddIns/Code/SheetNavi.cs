@@ -68,13 +68,13 @@ namespace AddIns
             Wb = wb;
             Option = new Code.FrmOption();
         }
-        
+
+        #region Sheet Controllers
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
             RefreshSheetList();
         }
-
-        #region 이전 / 이후 버튼
+        
         private void BtnPrev_Click(object sender, EventArgs e)
         {
             Globals.ThisAddIn.PrevSheet();
@@ -97,7 +97,7 @@ namespace AddIns
             else
                 BtnPrev.Enabled = false;
         }
-        #endregion 이전 / 이후 버튼
+        #endregion Sheet Controllers
 
         #region Sheet List
         private void MenuList_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -255,11 +255,32 @@ namespace AddIns
         }
         #endregion Common Library
 
+        #region Option
         private void BtnOption_Click(object sender, EventArgs e)
         {
             if(Option.ShowDialog() == DialogResult.OK)
             {
             }
         }
+        #endregion Option
+
+        #region Table Controllers
+        private void BtnReleaseFilter_Click(object sender, EventArgs e)
+        {
+             try
+            {
+                Worksheet ws = Wb.ActiveSheet;
+                foreach (ListObject tbl in ws.ListObjects)
+                {
+                    tbl.AutoFilter.ShowAllData(); // filter 해제
+                    Globals.ThisAddIn.Application.CutCopyMode = (Microsoft.Office.Interop.Excel.XlCutCopyMode)0;// 영역 Copy 모드 해제
+                    Globals.ThisAddIn.Application.Goto(tbl.Range[1.1]);  // 영역선택 해
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+        #endregion Table Controllrs
     }
 }
