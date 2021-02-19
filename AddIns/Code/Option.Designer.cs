@@ -31,12 +31,12 @@ namespace AddIns.Code
         {
             this.ChkAlwaysShow = new System.Windows.Forms.CheckBox();
             this.GrpDockPosition = new System.Windows.Forms.GroupBox();
+            this.LblNote_Dock = new System.Windows.Forms.Label();
             this.RdoDockRight = new System.Windows.Forms.RadioButton();
             this.RdoDockLeft = new System.Windows.Forms.RadioButton();
             this.GrpOkCancel = new System.Windows.Forms.GroupBox();
             this.BtnOk = new System.Windows.Forms.Button();
             this.BtnCancel = new System.Windows.Forms.Button();
-            this.LblNote_Dock = new System.Windows.Forms.Label();
             this.GrpDockPosition.SuspendLayout();
             this.GrpOkCancel.SuspendLayout();
             this.SuspendLayout();
@@ -58,10 +58,20 @@ namespace AddIns.Code
             this.GrpDockPosition.Controls.Add(this.RdoDockLeft);
             this.GrpDockPosition.Location = new System.Drawing.Point(12, 45);
             this.GrpDockPosition.Name = "GrpDockPosition";
-            this.GrpDockPosition.Size = new System.Drawing.Size(174, 56);
+            this.GrpDockPosition.Size = new System.Drawing.Size(223, 60);
             this.GrpDockPosition.TabIndex = 7;
             this.GrpDockPosition.TabStop = false;
             this.GrpDockPosition.Text = "표시위치";
+            // 
+            // LblNote_Dock
+            // 
+            this.LblNote_Dock.AutoSize = true;
+            this.LblNote_Dock.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.LblNote_Dock.Location = new System.Drawing.Point(3, 41);
+            this.LblNote_Dock.Name = "LblNote_Dock";
+            this.LblNote_Dock.Size = new System.Drawing.Size(141, 12);
+            this.LblNote_Dock.TabIndex = 2;
+            this.LblNote_Dock.Text = "※ 다음번 실행 시 적용됨";
             // 
             // RdoDockRight
             // 
@@ -90,16 +100,16 @@ namespace AddIns.Code
             this.GrpOkCancel.Controls.Add(this.BtnOk);
             this.GrpOkCancel.Controls.Add(this.BtnCancel);
             this.GrpOkCancel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.GrpOkCancel.Location = new System.Drawing.Point(0, 179);
+            this.GrpOkCancel.Location = new System.Drawing.Point(0, 182);
             this.GrpOkCancel.Name = "GrpOkCancel";
-            this.GrpOkCancel.Size = new System.Drawing.Size(198, 42);
+            this.GrpOkCancel.Size = new System.Drawing.Size(247, 42);
             this.GrpOkCancel.TabIndex = 8;
             this.GrpOkCancel.TabStop = false;
             // 
             // BtnOk
             // 
             this.BtnOk.Dock = System.Windows.Forms.DockStyle.Right;
-            this.BtnOk.Location = new System.Drawing.Point(45, 17);
+            this.BtnOk.Location = new System.Drawing.Point(94, 17);
             this.BtnOk.Name = "BtnOk";
             this.BtnOk.Size = new System.Drawing.Size(75, 22);
             this.BtnOk.TabIndex = 8;
@@ -111,23 +121,12 @@ namespace AddIns.Code
             // 
             this.BtnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.BtnCancel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.BtnCancel.Location = new System.Drawing.Point(120, 17);
+            this.BtnCancel.Location = new System.Drawing.Point(169, 17);
             this.BtnCancel.Name = "BtnCancel";
             this.BtnCancel.Size = new System.Drawing.Size(75, 22);
             this.BtnCancel.TabIndex = 7;
             this.BtnCancel.Text = "취소";
             this.BtnCancel.UseVisualStyleBackColor = true;
-            // 
-            // LblNote_Dock
-            // 
-            this.LblNote_Dock.AutoSize = true;
-            this.LblNote_Dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.LblNote_Dock.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.LblNote_Dock.Location = new System.Drawing.Point(3, 41);
-            this.LblNote_Dock.Name = "LblNote_Dock";
-            this.LblNote_Dock.Size = new System.Drawing.Size(129, 12);
-            this.LblNote_Dock.TabIndex = 2;
-            this.LblNote_Dock.Text = "※ 다음번 실행 시 적용";
             // 
             // FrmOption
             // 
@@ -136,7 +135,7 @@ namespace AddIns.Code
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.CancelButton = this.BtnCancel;
-            this.ClientSize = new System.Drawing.Size(198, 221);
+            this.ClientSize = new System.Drawing.Size(247, 224);
             this.ControlBox = false;
             this.Controls.Add(this.GrpOkCancel);
             this.Controls.Add(this.GrpDockPosition);

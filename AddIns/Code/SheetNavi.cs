@@ -256,9 +256,9 @@ namespace AddIns
         #endregion Common Library
 
         #region Option
-        private void BtnOption_Click(object sender, EventArgs e)
+        private void BtnCfg_Click(object sender, EventArgs e)
         {
-            if(Option.ShowDialog() == DialogResult.OK)
+            if (Option.ShowDialog() == DialogResult.OK)
             {
             }
         }

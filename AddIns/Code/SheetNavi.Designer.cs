@@ -51,7 +51,7 @@ namespace AddIns
             this.SheetList.FormattingEnabled = true;
             this.SheetList.Location = new System.Drawing.Point(0, 123);
             this.SheetList.Name = "SheetList";
-            this.SheetList.Size = new System.Drawing.Size(242, 93);
+            this.SheetList.Size = new System.Drawing.Size(250, 93);
             this.SheetList.TabIndex = 2;
             this.SheetList.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.SheetList_DrawItem);
             this.SheetList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.MenuList_MouseDoubleClick);
@@ -62,7 +62,7 @@ namespace AddIns
             this.GrpTblCtrl.Controls.Add(this.btnReleaseFilter);
             this.GrpTblCtrl.Location = new System.Drawing.Point(3, 61);
             this.GrpTblCtrl.Name = "GrpTblCtrl";
-            this.GrpTblCtrl.Size = new System.Drawing.Size(186, 53);
+            this.GrpTblCtrl.Size = new System.Drawing.Size(212, 53);
             this.GrpTblCtrl.TabIndex = 13;
             this.GrpTblCtrl.TabStop = false;
             this.GrpTblCtrl.Text = "테이블";
@@ -84,7 +84,7 @@ namespace AddIns
             this.GrpSheetCtrl.Controls.Add(this.BtnPrev);
             this.GrpSheetCtrl.Location = new System.Drawing.Point(3, 3);
             this.GrpSheetCtrl.Name = "GrpSheetCtrl";
-            this.GrpSheetCtrl.Size = new System.Drawing.Size(186, 52);
+            this.GrpSheetCtrl.Size = new System.Drawing.Size(212, 52);
             this.GrpSheetCtrl.TabIndex = 12;
             this.GrpSheetCtrl.TabStop = false;
             this.GrpSheetCtrl.Text = "시트";
@@ -129,11 +129,12 @@ namespace AddIns
             // 
             this.BtnCfg.BackgroundImage = global::AddIns.Properties.Resources.Cfg;
             this.BtnCfg.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.BtnCfg.Location = new System.Drawing.Point(195, 3);
+            this.BtnCfg.Location = new System.Drawing.Point(221, 3);
             this.BtnCfg.Name = "BtnCfg";
             this.BtnCfg.Size = new System.Drawing.Size(20, 20);
             this.BtnCfg.TabIndex = 10;
             this.BtnCfg.UseVisualStyleBackColor = true;
+            this.BtnCfg.Click += new System.EventHandler(this.BtnCfg_Click);
             // 
             // lytCtrls
             // 
@@ -143,7 +144,7 @@ namespace AddIns
             this.lytCtrls.Dock = System.Windows.Forms.DockStyle.Top;
             this.lytCtrls.Location = new System.Drawing.Point(0, 0);
             this.lytCtrls.Name = "lytCtrls";
-            this.lytCtrls.Size = new System.Drawing.Size(242, 123);
+            this.lytCtrls.Size = new System.Drawing.Size(250, 123);
             this.lytCtrls.TabIndex = 14;
             // 
             // SheetNavi
@@ -153,7 +154,7 @@ namespace AddIns
             this.Controls.Add(this.SheetList);
             this.Controls.Add(this.lytCtrls);
             this.Name = "SheetNavi";
-            this.Size = new System.Drawing.Size(242, 216);
+            this.Size = new System.Drawing.Size(250, 216);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.SheetNavi_Paint);
             this.GrpTblCtrl.ResumeLayout(false);
             this.GrpSheetCtrl.ResumeLayout(false);
