@@ -15,25 +15,48 @@ using ListObject = Microsoft.Office.Interop.Excel.ListObject;
 namespace AddIns
 {   public partial class SheetNavi : UserControl
     {
-        class SheetListItem
+        class SheetListItem : Dictionary<string, object>
         {
-            public string Name { get; set; }
-            public Color? ForeColor { get; set; }
-            public Color? BackColor { get; set; }
-            public string Note { get; set; }
+            const string ITM_NAME = "Name";
+            const string ITM_FORE_COLOR = "ForeColor";
+            const string ITM_BACK_COLOR = "BackColor";
+            const string ITM_NOTE = "Note";
+
+            public string Name
+            {
+                get => this[ITM_NAME].ToString();
+                set => this[ITM_NAME] = value;
+            }
+            public Color? ForeColor
+            {
+                get => (Color?)this[ITM_FORE_COLOR];
+                set => this[ITM_BACK_COLOR] = value;
+            }
+
+            public Color? BackColor
+            {
+                get => (Color?)this[ITM_BACK_COLOR];
+                set => this[ITM_BACK_COLOR] = (Color)value;
+            }
+
+            public string Note
+            {
+                get => (this[ITM_NOTE] == null) ? null : this[ITM_NOTE].ToString();
+                set => this[ITM_NOTE] = value;
+            }
 
             public SheetListItem(string item, Color? foreColor = null, Color? backColor = null, string note = null)
             {
-                Name = item;
-                ForeColor = foreColor;
-                BackColor = backColor;
-                Note = note;
+                this[ITM_NAME] = item;
+                this[ITM_FORE_COLOR] = foreColor;
+                this[ITM_BACK_COLOR] = backColor;
+                this[ITM_NOTE] = note;
             }
         };
 
-        const string NAME_IDX_TBL = "T_Index";
-        const string NAME_SHEETS = "Sheet";
-        const string NAME_NOTE = "Note";
+        const string TIDX_TBL_NAME = "T_Index";
+        const string TIDX_SHEET = "Sheet";
+        const string TIDX_NOTE = "Note";
 
         private Workbook Wb;
         private ListObject IndexTblObj;
@@ -97,11 +120,11 @@ namespace AddIns
         {
             SheetList.Items.Clear();
 
-            IndexTblObj = GetTblObj(NAME_IDX_TBL);
+            IndexTblObj = GetTblObj(TIDX_TBL_NAME);
             if (IndexTblObj != null)
             {
-                int idxSheetName = GetColumnIdx(IndexTblObj, NAME_SHEETS);
-                int idxNote = GetColumnIdx(IndexTblObj, NAME_NOTE);
+                int idxSheetName = GetColumnIdx(IndexTblObj, TIDX_SHEET);
+                int idxNote = GetColumnIdx(IndexTblObj, TIDX_NOTE);
                 if((idxSheetName != -1) && (idxNote != -1))
                 {
                     Excel.ListColumn listSheetNames = IndexTblObj.ListColumns[idxSheetName];
@@ -136,7 +159,8 @@ namespace AddIns
             //myListBox.Items.Cast<EnquiryListItem>().Any(item => item.Text == ComboBox1.SelectedText.ToString())
             foreach (SheetListItem item in SheetList.Items.Cast<SheetListItem>())
             {
-                if(item.Name == itemName)
+                //if (item.Name == itemName)
+                if (item.ContainsValue(itemName))
                 {
                     SheetList.SelectedItem = item;
                     break;
