@@ -52,7 +52,8 @@ namespace AddIns
             this.SheetList.Size = new System.Drawing.Size(223, 290);
             this.SheetList.TabIndex = 2;
             this.SheetList.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.SheetList_DrawItem);
-            this.SheetList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.MenuList_MouseDoubleClick);
+            this.SheetList.DoubleClick += new System.EventHandler(this.SheetList_DoubleClick);
+            this.SheetList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SheetList_KeyDown);
             this.SheetList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.SheetList_MouseMove);
             // 
             // GrpTblCtrl

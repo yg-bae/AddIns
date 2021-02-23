@@ -100,7 +100,7 @@ namespace AddIns
         #endregion Sheet Controllers
 
         #region Sheet List
-        private void MenuList_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void OpenSheet()
         {
             // 두개의 workbook이 열려 있을 때 deactive된 workbook에 있는 SheetList를 double-click 하면 Error 발생함
             try
@@ -114,6 +114,29 @@ namespace AddIns
             }
             catch (System.Runtime.InteropServices.COMException)
             {
+            }
+        }
+
+        private void SheetList_DoubleClick(object sender, EventArgs e)
+        {
+            OpenSheet();
+        }
+
+        private void SheetList_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyData)
+            {
+                case Keys.Enter:
+                    OpenSheet();
+                    break;
+                case Keys.Back:
+                    Globals.ThisAddIn.PrevSheet();
+                    break;
+                case (Keys.Shift | Keys.Back):
+                    Globals.ThisAddIn.NextSheet();
+                    break;
+                default:
+                    break;
             }
         }
 
