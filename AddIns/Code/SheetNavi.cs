@@ -88,14 +88,26 @@ namespace AddIns
         public void BtnEnDisableChk()
         {
             if (Globals.ThisAddIn.NumOfNext > 0)
+            {
                 BtnNext.Enabled = true;
+                BtnNext.BackgroundImage = Properties.Resources.Arrow_Right;
+            }
             else
+            {
                 BtnNext.Enabled = false;
-
+                BtnNext.BackgroundImage = Properties.Resources.Arrow_Right_Gray;
+            }
+                
             if (Globals.ThisAddIn.NumOfPrev > 0)
+            {
                 BtnPrev.Enabled = true;
+                BtnPrev.BackgroundImage = Properties.Resources.Arrow_Left;
+            }
             else
+            {
                 BtnPrev.Enabled = false;
+                BtnPrev.BackgroundImage = Properties.Resources.Arrow_Left_Gray;
+            }
         }
         #endregion Sheet Controllers
 
