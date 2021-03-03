@@ -58,7 +58,7 @@ namespace AddIns
 
         public void SetCallBack_RibonButtonEnDisable(Func<int, int> func) => pFuncRibonButtonEnDisable = func;
 
-        private void CreateNewSheetHistoryStack(Workbook wb)
+        private void CreateSheetHistoryStack(Workbook wb)
         {
             if (!SheetHistoryDict_Prev.ContainsKey(wb.Name))
             {
@@ -80,15 +80,7 @@ namespace AddIns
         private Dictionary<string, SheetNavi> SheetNaviObjDict = new Dictionary<string, SheetNavi>();
         private Func<int, int> pFuncRibonButtonEnDisable;
 
-        public void ShowSheetNavi()
-        {
-            CreateNewSheetNaviPane();
-            SheetNaviPaneDict[Application.ActiveWorkbook.Name].Width = 250;
-            SheetNaviObjDict[Application.ActiveWorkbook.Name].BtnEnDisableChk();
-            SheetNaviPaneDict[Application.ActiveWorkbook.Name].Visible = true;
-        }
-
-        public void CreateNewSheetNaviPane()
+        public void CreateSheetNaviPane(Boolean ShowPane)
         {
             Workbook wb = Application.ActiveWorkbook;
             
@@ -96,44 +88,47 @@ namespace AddIns
             {
                 SheetNavi obj = new SheetNavi(wb);
                 SheetNaviObjDict[wb.Name] = obj;
-                SheetNaviPaneDict[wb.Name] = this.CustomTaskPanes.Add(obj, "Sheet Navigation");
-                SheetNaviPaneDict[wb.Name].DockPosition = Properties.Settings.Default.SheetNavi_DockPosition;
+                SheetNaviObjDict[wb.Name].BtnEnDisableChk();
                 SheetNaviObjDict[wb.Name].RefreshSheetList();
+
+                SheetNaviPaneDict[wb.Name] = CustomTaskPanes.Add(obj, "Sheet Navigation");
+                SheetNaviPaneDict[wb.Name].DockPosition = Properties.Settings.Default.SheetNavi_DockPosition;
+                SheetNaviPaneDict[wb.Name].Width = 250;
+            }
+
+            SheetNaviPaneDict[wb.Name].Visible = ShowPane;
+        }
+
+        public void ShowSheetNaviPane()
+        {
+            Workbook wb = Application.ActiveWorkbook;
+
+            if (!SheetNaviPaneDict.ContainsKey(wb.Name))
+            {
+                SheetNaviPaneDict[wb.Name].Visible = true;
             }
         }
         #endregion Sheet Navigation
 
 
         #region Event Function
-        private void WorkbookActivate(Excel.Workbook wb)
-        {
-            CreateNewSheetHistoryStack(wb);
-            CreateNewSheetNaviPane();
-            pFuncRibonButtonEnDisable(0);
-            SheetNaviObjDict[wb.Name].BtnEnDisableChk();
-            if (Properties.Settings.Default.SheetNavi_AlwaysShow)
-                ShowSheetNavi();
-        }
 
         private void WorkbookOpen(Excel.Workbook wb)
         {
-            CreateNewSheetHistoryStack(wb);
-            CreateNewSheetNaviPane();
+            CreateSheetHistoryStack(wb);
+
+            // WorkbookOpen 이벤트에서는 excel만 실행시킨 경우에는 pane이 생성안됨
+            // RibbonButton_Load 이벤트에서 excel만 실행시킨 경우 pane이 생성됨
+            CreateSheetNaviPane(Properties.Settings.Default.SheetNavi_AlwaysShow);
+
             pFuncRibonButtonEnDisable(0);
             SheetNaviObjDict[wb.Name].BtnEnDisableChk();
-            if (Properties.Settings.Default.SheetNavi_AlwaysShow)
-                ShowSheetNavi();
-        }
-
-        private void WorksheetActivate(object sh)
-        {
-            
         }
 
         private void WorksheetDeactivate(object sh)
         {
             Worksheet sht = (Worksheet)sh;
-            CreateNewSheetHistoryStack(sht.Parent);
+            CreateSheetHistoryStack(sht.Parent);
 
             if (string.IsNullOrEmpty(GotoSheet))
             {
@@ -151,9 +146,7 @@ namespace AddIns
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-            //this.Application.WorkbookActivate += WorkbookActivate;
             this.Application.WorkbookOpen += WorkbookOpen;
-            this.Application.SheetActivate += WorksheetActivate;
             this.Application.SheetDeactivate += WorksheetDeactivate;
         }
 
