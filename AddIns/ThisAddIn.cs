@@ -91,6 +91,7 @@ namespace AddIns
         public void CreateNewSheetNaviPane()
         {
             Workbook wb = Application.ActiveWorkbook;
+            
             if (!SheetNaviPaneDict.ContainsKey(wb.Name))
             {
                 SheetNavi obj = new SheetNavi(wb);
@@ -114,11 +115,19 @@ namespace AddIns
                 ShowSheetNavi();
         }
 
+        private void WorkbookOpen(Excel.Workbook wb)
+        {
+            CreateNewSheetHistoryStack(wb);
+            CreateNewSheetNaviPane();
+            pFuncRibonButtonEnDisable(0);
+            SheetNaviObjDict[wb.Name].BtnEnDisableChk();
+            if (Properties.Settings.Default.SheetNavi_AlwaysShow)
+                ShowSheetNavi();
+        }
+
         private void WorksheetActivate(object sh)
         {
-            Worksheet sht = (Worksheet)sh;
-            Workbook wb = sht.Parent;
-            SheetNaviObjDict[wb.Name].SelectItem(sht.Name);
+            
         }
 
         private void WorksheetDeactivate(object sh)
@@ -142,7 +151,8 @@ namespace AddIns
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-            this.Application.WorkbookActivate += WorkbookActivate;
+            //this.Application.WorkbookActivate += WorkbookActivate;
+            this.Application.WorkbookOpen += WorkbookOpen;
             this.Application.SheetActivate += WorksheetActivate;
             this.Application.SheetDeactivate += WorksheetDeactivate;
         }

@@ -46,9 +46,9 @@ namespace AddIns.Code
             this.ChkAlwaysShow.AutoSize = true;
             this.ChkAlwaysShow.Location = new System.Drawing.Point(12, 12);
             this.ChkAlwaysShow.Name = "ChkAlwaysShow";
-            this.ChkAlwaysShow.Size = new System.Drawing.Size(88, 16);
+            this.ChkAlwaysShow.Size = new System.Drawing.Size(222, 16);
             this.ChkAlwaysShow.TabIndex = 4;
-            this.ChkAlwaysShow.Text = "항상 보이기";
+            this.ChkAlwaysShow.Text = "파일 열때 항상 보이기(새 파일 제외)";
             this.ChkAlwaysShow.UseVisualStyleBackColor = true;
             // 
             // GrpDockPosition
@@ -58,7 +58,7 @@ namespace AddIns.Code
             this.GrpDockPosition.Controls.Add(this.RdoDockLeft);
             this.GrpDockPosition.Location = new System.Drawing.Point(12, 45);
             this.GrpDockPosition.Name = "GrpDockPosition";
-            this.GrpDockPosition.Size = new System.Drawing.Size(223, 60);
+            this.GrpDockPosition.Size = new System.Drawing.Size(223, 66);
             this.GrpDockPosition.TabIndex = 7;
             this.GrpDockPosition.TabStop = false;
             this.GrpDockPosition.Text = "표시위치";

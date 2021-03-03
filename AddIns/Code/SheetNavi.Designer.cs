@@ -33,10 +33,12 @@ namespace AddIns
             this.GrpTblCtrl = new System.Windows.Forms.GroupBox();
             this.btnReleaseFilter = new System.Windows.Forms.Button();
             this.GrpSheetCtrl = new System.Windows.Forms.GroupBox();
+            this.lblPrevNext = new System.Windows.Forms.Label();
+            this.lblRefresh = new System.Windows.Forms.Label();
+            this.BtnCfg = new System.Windows.Forms.Button();
             this.BtnRefresh = new System.Windows.Forms.Button();
             this.BtnNext = new System.Windows.Forms.Button();
             this.BtnPrev = new System.Windows.Forms.Button();
-            this.BtnCfg = new System.Windows.Forms.Button();
             this.GrpTblCtrl.SuspendLayout();
             this.GrpSheetCtrl.SuspendLayout();
             this.SuspendLayout();
@@ -47,9 +49,9 @@ namespace AddIns
             this.SheetList.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.SheetList.Font = new System.Drawing.Font("굴림체", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.SheetList.FormattingEnabled = true;
-            this.SheetList.Location = new System.Drawing.Point(0, 105);
+            this.SheetList.Location = new System.Drawing.Point(0, 160);
             this.SheetList.Name = "SheetList";
-            this.SheetList.Size = new System.Drawing.Size(223, 290);
+            this.SheetList.Size = new System.Drawing.Size(223, 235);
             this.SheetList.TabIndex = 2;
             this.SheetList.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.SheetList_DrawItem);
             this.SheetList.DoubleClick += new System.EventHandler(this.SheetList_DoubleClick);
@@ -60,7 +62,7 @@ namespace AddIns
             // 
             this.GrpTblCtrl.Controls.Add(this.btnReleaseFilter);
             this.GrpTblCtrl.Dock = System.Windows.Forms.DockStyle.Top;
-            this.GrpTblCtrl.Location = new System.Drawing.Point(0, 52);
+            this.GrpTblCtrl.Location = new System.Drawing.Point(0, 107);
             this.GrpTblCtrl.Name = "GrpTblCtrl";
             this.GrpTblCtrl.Size = new System.Drawing.Size(223, 53);
             this.GrpTblCtrl.TabIndex = 13;
@@ -79,6 +81,8 @@ namespace AddIns
             // 
             // GrpSheetCtrl
             // 
+            this.GrpSheetCtrl.Controls.Add(this.lblPrevNext);
+            this.GrpSheetCtrl.Controls.Add(this.lblRefresh);
             this.GrpSheetCtrl.Controls.Add(this.BtnCfg);
             this.GrpSheetCtrl.Controls.Add(this.BtnRefresh);
             this.GrpSheetCtrl.Controls.Add(this.BtnNext);
@@ -86,18 +90,49 @@ namespace AddIns
             this.GrpSheetCtrl.Dock = System.Windows.Forms.DockStyle.Top;
             this.GrpSheetCtrl.Location = new System.Drawing.Point(0, 0);
             this.GrpSheetCtrl.Name = "GrpSheetCtrl";
-            this.GrpSheetCtrl.Size = new System.Drawing.Size(223, 52);
+            this.GrpSheetCtrl.Size = new System.Drawing.Size(223, 107);
             this.GrpSheetCtrl.TabIndex = 12;
             this.GrpSheetCtrl.TabStop = false;
             this.GrpSheetCtrl.Text = "시트";
             // 
+            // lblPrevNext
+            // 
+            this.lblPrevNext.AutoSize = true;
+            this.lblPrevNext.Location = new System.Drawing.Point(121, 73);
+            this.lblPrevNext.Name = "lblPrevNext";
+            this.lblPrevNext.Size = new System.Drawing.Size(95, 12);
+            this.lblPrevNext.TabIndex = 12;
+            this.lblPrevNext.Text = "이전 / 이후 시트";
+            // 
+            // lblRefresh
+            // 
+            this.lblRefresh.AutoSize = true;
+            this.lblRefresh.Location = new System.Drawing.Point(2, 74);
+            this.lblRefresh.Name = "lblRefresh";
+            this.lblRefresh.Size = new System.Drawing.Size(53, 12);
+            this.lblRefresh.TabIndex = 11;
+            this.lblRefresh.Text = "새로고침";
+            // 
+            // BtnCfg
+            // 
+            this.BtnCfg.BackgroundImage = global::AddIns.Properties.Resources.Cfg;
+            this.BtnCfg.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.BtnCfg.Location = new System.Drawing.Point(197, 0);
+            this.BtnCfg.Name = "BtnCfg";
+            this.BtnCfg.Size = new System.Drawing.Size(23, 24);
+            this.BtnCfg.TabIndex = 10;
+            this.BtnCfg.UseVisualStyleBackColor = true;
+            this.BtnCfg.Click += new System.EventHandler(this.BtnCfg_Click);
+            // 
             // BtnRefresh
             // 
-            this.BtnRefresh.Location = new System.Drawing.Point(6, 20);
+            this.BtnRefresh.BackgroundImage = global::AddIns.Properties.Resources.Refresh;
+            this.BtnRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.BtnRefresh.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.BtnRefresh.Location = new System.Drawing.Point(6, 30);
             this.BtnRefresh.Name = "BtnRefresh";
-            this.BtnRefresh.Size = new System.Drawing.Size(75, 24);
+            this.BtnRefresh.Size = new System.Drawing.Size(44, 40);
             this.BtnRefresh.TabIndex = 8;
-            this.BtnRefresh.Text = "새로고침";
             this.BtnRefresh.UseVisualStyleBackColor = true;
             this.BtnRefresh.Click += new System.EventHandler(this.BtnRefresh_Click);
             // 
@@ -107,9 +142,9 @@ namespace AddIns
             this.BtnNext.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.BtnNext.Enabled = false;
             this.BtnNext.ImageKey = "(없음)";
-            this.BtnNext.Location = new System.Drawing.Point(145, 20);
+            this.BtnNext.Location = new System.Drawing.Point(169, 30);
             this.BtnNext.Name = "BtnNext";
-            this.BtnNext.Size = new System.Drawing.Size(23, 24);
+            this.BtnNext.Size = new System.Drawing.Size(40, 40);
             this.BtnNext.TabIndex = 4;
             this.BtnNext.UseVisualStyleBackColor = true;
             this.BtnNext.Click += new System.EventHandler(this.BtnNext_Click);
@@ -120,23 +155,12 @@ namespace AddIns
             this.BtnPrev.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.BtnPrev.Enabled = false;
             this.BtnPrev.ImageKey = "(없음)";
-            this.BtnPrev.Location = new System.Drawing.Point(116, 20);
+            this.BtnPrev.Location = new System.Drawing.Point(123, 30);
             this.BtnPrev.Name = "BtnPrev";
-            this.BtnPrev.Size = new System.Drawing.Size(23, 24);
+            this.BtnPrev.Size = new System.Drawing.Size(40, 40);
             this.BtnPrev.TabIndex = 9;
             this.BtnPrev.UseVisualStyleBackColor = true;
             this.BtnPrev.Click += new System.EventHandler(this.BtnPrev_Click);
-            // 
-            // BtnCfg
-            // 
-            this.BtnCfg.BackgroundImage = global::AddIns.Properties.Resources.Cfg;
-            this.BtnCfg.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.BtnCfg.Location = new System.Drawing.Point(87, 20);
-            this.BtnCfg.Name = "BtnCfg";
-            this.BtnCfg.Size = new System.Drawing.Size(23, 24);
-            this.BtnCfg.TabIndex = 10;
-            this.BtnCfg.UseVisualStyleBackColor = true;
-            this.BtnCfg.Click += new System.EventHandler(this.BtnCfg_Click);
             // 
             // SheetNavi
             // 
@@ -150,6 +174,7 @@ namespace AddIns
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.SheetNavi_Paint);
             this.GrpTblCtrl.ResumeLayout(false);
             this.GrpSheetCtrl.ResumeLayout(false);
+            this.GrpSheetCtrl.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -163,5 +188,7 @@ namespace AddIns
         private System.Windows.Forms.Button BtnNext;
         private System.Windows.Forms.Button BtnPrev;
         private System.Windows.Forms.Button BtnCfg;
+        private System.Windows.Forms.Label lblPrevNext;
+        private System.Windows.Forms.Label lblRefresh;
     }
 }
