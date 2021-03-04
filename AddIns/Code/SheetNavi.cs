@@ -118,17 +118,14 @@ namespace AddIns
         #endregion Sheet Controllers
 
         #region Sheet List
-        private void OpenSheet()
+        private void OpenSheet(SheetListItem selectedItem)
         {
             // 두개의 workbook이 열려 있을 때 deactive된 workbook에 있는 LstSheetList 를 double-click 하면 Error 발생함
             try
             {
-                SheetListItem selectedItem = LstSheetList.SelectedItem as SheetListItem;
-                if (selectedItem != null)
-                {
-                    Worksheet ws = Wb.Worksheets[selectedItem.Name];
+                Worksheet ws = Wb.Worksheets.OfType<Excel.Worksheet>().FirstOrDefault(Worksheets => Worksheets.Name == selectedItem.Name);
+                if (ws != null)
                     ws.Activate();
-                }
             }
             catch (System.Runtime.InteropServices.COMException)
             {
@@ -137,7 +134,7 @@ namespace AddIns
 
         private void SheetList_DoubleClick(object sender, EventArgs e)
         {
-            OpenSheet();
+            OpenSheet(LstSheetList.SelectedItem as SheetListItem);
         }
 
         private void SheetList_KeyDown(object sender, KeyEventArgs e)
@@ -145,7 +142,7 @@ namespace AddIns
             switch (e.KeyData)
             {
                 case Keys.Enter:
-                    OpenSheet();
+                    OpenSheet(LstSheetList.SelectedItem as SheetListItem);
                     break;
                 case Keys.Back:
                     Globals.ThisAddIn.PrevSheet();
@@ -240,7 +237,7 @@ namespace AddIns
             if (CboSheetList.SelectedIndex != LstSheetList.SelectedIndex)
             {
                 LstSheetList.SelectedIndex = CboSheetList.SelectedIndex;
-                OpenSheet();
+                OpenSheet(LstSheetList.SelectedItem as SheetListItem);
             }
         }
         #endregion Sheet List
