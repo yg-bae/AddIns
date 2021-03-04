@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using System.Windows.Forms;
 using Microsoft.Office.Tools.Excel;
 using Office = Microsoft.Office.Core;
 using Excel = Microsoft.Office.Interop.Excel;
@@ -83,7 +84,7 @@ namespace AddIns
         public void CreateSheetNaviPane(Boolean ShowPane)
         {
             Workbook wb = Application.ActiveWorkbook;
-            
+
             if (!SheetNaviPaneDict.ContainsKey(wb.Name))
             {
                 SheetNavi obj = new SheetNavi(wb);
@@ -116,7 +117,6 @@ namespace AddIns
         private void WorkbookOpen(Excel.Workbook wb)
         {
             CreateSheetHistoryStack(wb);
-
             // WorkbookOpen 이벤트에서는 excel만 실행시킨 경우에는 pane이 생성안됨
             // RibbonButton_Load 이벤트에서 excel만 실행시킨 경우 pane이 생성됨
             CreateSheetNaviPane(Properties.Settings.Default.SheetNavi_AlwaysShow);
@@ -146,14 +146,15 @@ namespace AddIns
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-            this.Application.WorkbookOpen += WorkbookOpen;
-            this.Application.SheetDeactivate += WorksheetDeactivate;
+            Application.WorkbookOpen += WorkbookOpen;
+            Application.SheetDeactivate += WorksheetDeactivate;
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
         }
-        #endregion Evetn Function
+        #endregion Event Function
+
 
 
         #region VSTO에서 생성한 코드
