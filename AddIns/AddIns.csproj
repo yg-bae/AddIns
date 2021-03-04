@@ -205,7 +205,7 @@
     <EmbeddedResource Include="Code\SheetNavi.resx">
       <DependentUpon>SheetNavi.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="AddIns_TemporaryKey.pfx" />
+    <None Include="AddInKey.pfx" />
     <None Include="app.config" />
     <None Include="Properties\DataSources\AddIns.Properties.Settings.datasource" />
     <None Include="Properties\Settings.settings">
@@ -278,7 +278,13 @@
     <ManifestKeyFile>AddIns_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>BC03EB9C7CDFDB145D3A54E18DD02E00D43669BD</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>99B46126FB1882A074CEDDD7FA1FB4A2CB76C92A</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>AddInKey.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <!-- Include the build rules for a C# project. -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

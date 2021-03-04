@@ -29,34 +29,35 @@ namespace AddIns
         /// </summary>
         private void InitializeComponent()
         {
-            this.SheetList = new System.Windows.Forms.ListBox();
+            this.LstSheetList = new System.Windows.Forms.ListBox();
             this.GrpTblCtrl = new System.Windows.Forms.GroupBox();
             this.btnReleaseFilter = new System.Windows.Forms.Button();
             this.GrpSheetCtrl = new System.Windows.Forms.GroupBox();
+            this.CboSheetList = new System.Windows.Forms.ComboBox();
             this.lblPrevNext = new System.Windows.Forms.Label();
             this.lblRefresh = new System.Windows.Forms.Label();
-            this.BtnCfg = new System.Windows.Forms.Button();
             this.BtnRefresh = new System.Windows.Forms.Button();
             this.BtnNext = new System.Windows.Forms.Button();
             this.BtnPrev = new System.Windows.Forms.Button();
+            this.BtnCfg = new System.Windows.Forms.Button();
             this.GrpTblCtrl.SuspendLayout();
             this.GrpSheetCtrl.SuspendLayout();
             this.SuspendLayout();
             // 
-            // SheetList
+            // LstSheetList
             // 
-            this.SheetList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SheetList.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.SheetList.Font = new System.Drawing.Font("굴림체", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.SheetList.FormattingEnabled = true;
-            this.SheetList.Location = new System.Drawing.Point(0, 94);
-            this.SheetList.Name = "SheetList";
-            this.SheetList.Size = new System.Drawing.Size(223, 248);
-            this.SheetList.TabIndex = 1;
-            this.SheetList.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.SheetList_DrawItem);
-            this.SheetList.DoubleClick += new System.EventHandler(this.SheetList_DoubleClick);
-            this.SheetList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SheetList_KeyDown);
-            this.SheetList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.SheetList_MouseMove);
+            this.LstSheetList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LstSheetList.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.LstSheetList.Font = new System.Drawing.Font("굴림체", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.LstSheetList.FormattingEnabled = true;
+            this.LstSheetList.Location = new System.Drawing.Point(0, 132);
+            this.LstSheetList.Name = "LstSheetList";
+            this.LstSheetList.Size = new System.Drawing.Size(223, 210);
+            this.LstSheetList.TabIndex = 1;
+            this.LstSheetList.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.LstSheetList_DrawItem);
+            this.LstSheetList.DoubleClick += new System.EventHandler(this.SheetList_DoubleClick);
+            this.LstSheetList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SheetList_KeyDown);
+            this.LstSheetList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.SheetList_MouseMove);
             // 
             // GrpTblCtrl
             // 
@@ -81,6 +82,7 @@ namespace AddIns
             // 
             // GrpSheetCtrl
             // 
+            this.GrpSheetCtrl.Controls.Add(this.CboSheetList);
             this.GrpSheetCtrl.Controls.Add(this.lblPrevNext);
             this.GrpSheetCtrl.Controls.Add(this.lblRefresh);
             this.GrpSheetCtrl.Controls.Add(this.BtnRefresh);
@@ -89,10 +91,22 @@ namespace AddIns
             this.GrpSheetCtrl.Dock = System.Windows.Forms.DockStyle.Top;
             this.GrpSheetCtrl.Location = new System.Drawing.Point(0, 0);
             this.GrpSheetCtrl.Name = "GrpSheetCtrl";
-            this.GrpSheetCtrl.Size = new System.Drawing.Size(223, 94);
+            this.GrpSheetCtrl.Size = new System.Drawing.Size(223, 132);
             this.GrpSheetCtrl.TabIndex = 10;
             this.GrpSheetCtrl.TabStop = false;
             this.GrpSheetCtrl.Text = "시트";
+            // 
+            // CboSheetList
+            // 
+            this.CboSheetList.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.CboSheetList.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.CboSheetList.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.CboSheetList.FormattingEnabled = true;
+            this.CboSheetList.Location = new System.Drawing.Point(3, 109);
+            this.CboSheetList.Name = "CboSheetList";
+            this.CboSheetList.Size = new System.Drawing.Size(217, 20);
+            this.CboSheetList.TabIndex = 14;
+            this.CboSheetList.SelectedValueChanged += new System.EventHandler(this.CboSheetList_SelectedValueChanged);
             // 
             // lblPrevNext
             // 
@@ -111,17 +125,6 @@ namespace AddIns
             this.lblRefresh.Size = new System.Drawing.Size(53, 12);
             this.lblRefresh.TabIndex = 11;
             this.lblRefresh.Text = "새로고침";
-            // 
-            // BtnCfg
-            // 
-            this.BtnCfg.BackgroundImage = global::AddIns.Properties.Resources.Cfg;
-            this.BtnCfg.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.BtnCfg.Location = new System.Drawing.Point(200, 0);
-            this.BtnCfg.Name = "BtnCfg";
-            this.BtnCfg.Size = new System.Drawing.Size(23, 24);
-            this.BtnCfg.TabIndex = 30;
-            this.BtnCfg.UseVisualStyleBackColor = true;
-            this.BtnCfg.Click += new System.EventHandler(this.BtnCfg_Click);
             // 
             // BtnRefresh
             // 
@@ -161,11 +164,22 @@ namespace AddIns
             this.BtnPrev.UseVisualStyleBackColor = true;
             this.BtnPrev.Click += new System.EventHandler(this.BtnPrev_Click);
             // 
+            // BtnCfg
+            // 
+            this.BtnCfg.BackgroundImage = global::AddIns.Properties.Resources.Cfg;
+            this.BtnCfg.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.BtnCfg.Location = new System.Drawing.Point(200, 0);
+            this.BtnCfg.Name = "BtnCfg";
+            this.BtnCfg.Size = new System.Drawing.Size(23, 24);
+            this.BtnCfg.TabIndex = 30;
+            this.BtnCfg.UseVisualStyleBackColor = true;
+            this.BtnCfg.Click += new System.EventHandler(this.BtnCfg_Click);
+            // 
             // SheetNavi
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.SheetList);
+            this.Controls.Add(this.LstSheetList);
             this.Controls.Add(this.GrpTblCtrl);
             this.Controls.Add(this.BtnCfg);
             this.Controls.Add(this.GrpSheetCtrl);
@@ -180,7 +194,7 @@ namespace AddIns
         }
 
         #endregion
-        private System.Windows.Forms.ListBox SheetList;
+        private System.Windows.Forms.ListBox LstSheetList;
         private System.Windows.Forms.GroupBox GrpTblCtrl;
         private System.Windows.Forms.Button btnReleaseFilter;
         private System.Windows.Forms.GroupBox GrpSheetCtrl;
@@ -190,5 +204,6 @@ namespace AddIns
         private System.Windows.Forms.Button BtnCfg;
         private System.Windows.Forms.Label lblPrevNext;
         private System.Windows.Forms.Label lblRefresh;
+        private System.Windows.Forms.ComboBox CboSheetList;
     }
 }

@@ -17,10 +17,10 @@ namespace AddIns
     {
         class SheetListItem : Dictionary<string, object>
         {
-            const string ITM_NAME = "Name";
-            const string ITM_FORE_COLOR = "ForeColor";
-            const string ITM_BACK_COLOR = "BackColor";
-            const string ITM_NOTE = "Note";
+            public const string ITM_NAME = "Name";
+            public const string ITM_FORE_COLOR = "ForeColor";
+            public const string ITM_BACK_COLOR = "BackColor";
+            public const string ITM_NOTE = "Note";
 
             public string Name
             {
@@ -61,12 +61,18 @@ namespace AddIns
         private Workbook Wb;
         private ListObject IndexTblObj;
         private Code.FrmOption Option;
+        private BindingList<SheetListItem> SheetList = new BindingList<SheetListItem>();
 
         public SheetNavi(Workbook wb)
         {
             InitializeComponent();
             Wb = wb;
             Option = new Code.FrmOption();
+
+            LstSheetList.DataSource = SheetList;
+            LstSheetList.DisplayMember = SheetListItem.ITM_NAME;
+            CboSheetList.DataSource = SheetList;
+            CboSheetList.DisplayMember = SheetListItem.ITM_NAME;
         }
 
         #region Sheet Controllers
@@ -114,10 +120,10 @@ namespace AddIns
         #region Sheet List
         private void OpenSheet()
         {
-            // 두개의 workbook이 열려 있을 때 deactive된 workbook에 있는 SheetList를 double-click 하면 Error 발생함
+            // 두개의 workbook이 열려 있을 때 deactive된 workbook에 있는 LstSheetList 를 double-click 하면 Error 발생함
             try
             {
-                SheetListItem selectedItem = SheetList.SelectedItem as SheetListItem;
+                SheetListItem selectedItem = LstSheetList.SelectedItem as SheetListItem;
                 if (selectedItem != null)
                 {
                     Worksheet ws = Wb.Worksheets[selectedItem.Name];
@@ -154,7 +160,7 @@ namespace AddIns
 
         public void RefreshSheetList()
         {
-            SheetList.Items.Clear();
+            SheetList.Clear();
 
             IndexTblObj = GetTblObj(TIDX_TBL_NAME);
             if (IndexTblObj != null)
@@ -171,7 +177,7 @@ namespace AddIns
                         
                         Color foreColor = System.Drawing.ColorTranslator.FromOle((int)((double)IndexTblObj.DataBodyRange[i, idxSheetName].Font.Color));
                         Color backColor = System.Drawing.ColorTranslator.FromOle((int)((double)IndexTblObj.DataBodyRange[i, idxSheetName].Interior.Color));
-                        SheetList.Items.Add(new SheetListItem(sheetName, foreColor, backColor, toolTip));
+                        SheetList.Add(new SheetListItem(sheetName, foreColor, backColor, toolTip));
                     }
                 }
             }
@@ -181,7 +187,7 @@ namespace AddIns
                 {
                     foreach (Worksheet sht in Wb.Worksheets)
                     {
-                        SheetList.Items.Add(new SheetListItem(sht.Name));
+                        SheetList.Add(new SheetListItem(sht.Name));
                     }
                 }
                 catch (System.Runtime.InteropServices.COMException)
@@ -193,21 +199,20 @@ namespace AddIns
         public void SelectItem(string itemName)
         {
             //myListBox.Items.Cast<EnquiryListItem>().Any(item => item.Text == ComboBox1.SelectedText.ToString())
-            foreach (SheetListItem item in SheetList.Items.Cast<SheetListItem>())
+            foreach (SheetListItem item in LstSheetList.Items.Cast<SheetListItem>())
             {
-                //if (item.Name == itemName)
                 if (item.ContainsValue(itemName))
                 {
-                    SheetList.SelectedItem = item;
+                    LstSheetList.SelectedItem = item;
                     break;
                 }
             }
         }
 
-        private void SheetList_DrawItem(object sender, DrawItemEventArgs e)
+        private void LstSheetList_DrawItem(object sender, DrawItemEventArgs e)
         {
             Graphics g = e.Graphics;
-            SheetListItem sheetListItem = SheetList.Items[e.Index] as SheetListItem;
+            SheetListItem sheetListItem = LstSheetList.Items[e.Index] as SheetListItem;
             SolidBrush foregroundBrush = new SolidBrush((((e.State & DrawItemState.Selected) != DrawItemState.Selected) && (sheetListItem.ForeColor != null)) ? (Color)sheetListItem.ForeColor : e.ForeColor);
             SolidBrush backgroundBrush = new SolidBrush((((e.State & DrawItemState.Selected) != DrawItemState.Selected) && (sheetListItem.BackColor != null)) ? (Color)sheetListItem.BackColor : e.BackColor);
             Font textFont = e.Font;
@@ -229,6 +234,15 @@ namespace AddIns
           * -> event를 통해서 refresh하는 것은 포기 */
             //   RefreshSheetList();
         }
+
+        private void CboSheetList_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (CboSheetList.SelectedIndex != LstSheetList.SelectedIndex)
+            {
+                LstSheetList.SelectedIndex = CboSheetList.SelectedIndex;
+                OpenSheet();
+            }
+        }
         #endregion Sheet List
 
         #region Tool Tip Text
@@ -237,7 +251,7 @@ namespace AddIns
         private void SheetList_MouseMove(object sender, MouseEventArgs e)
         {
             // See which row is currently under the mouse:
-            int newHoveredIndex = SheetList.IndexFromPoint(e.Location);
+            int newHoveredIndex = LstSheetList.IndexFromPoint(e.Location);
 
             // If the row has changed since last moving the mouse:
             if (hoveredIndex != newHoveredIndex)
@@ -249,12 +263,12 @@ namespace AddIns
 
                 if (hoveredIndex > -1)  // If over a row showing data (rather than blank space):
                 {
-                    SheetListItem sheetListItem = SheetList.Items[hoveredIndex] as SheetListItem;
+                    SheetListItem sheetListItem = LstSheetList.Items[hoveredIndex] as SheetListItem;
                     if (sheetListItem.Note != null)
                     {
                         toolTip.InitialDelay = 1;
                         toolTip.Active = false;
-                        toolTip.SetToolTip(SheetList, sheetListItem.Note);
+                        toolTip.SetToolTip(LstSheetList, sheetListItem.Note);
                         toolTip.Active = true;
                     }
                 }
