@@ -81,7 +81,7 @@ namespace AddIns
         private Dictionary<string, SheetNavi> SheetNaviObjDict = new Dictionary<string, SheetNavi>();
         private Func<int, int> pFuncRibonButtonEnDisable;
 
-        public void CreateSheetNaviPane(Boolean ShowPane, Workbook workbook = null)
+        public void CreateSheetNaviPane(bool ShowPane, Workbook workbook = null)
         {
             workbook = (workbook == null) ? Application.ActiveWorkbook : workbook;   
 
@@ -97,17 +97,14 @@ namespace AddIns
                 SheetNaviPaneDict[workbook.Name].Width = 250;
             }
 
-            if(ShowPane)    // false라고 해서 굳이 pane을 끄지는 않는다.
-                SheetNaviPaneDict[workbook.Name].Visible = true;
-        }
-
-        public void ShowSheetNaviPane()
-        {
-            Workbook wb = Application.ActiveWorkbook;
-
-            if (!SheetNaviPaneDict.ContainsKey(wb.Name))
+            if(ShowPane)
             {
-                SheetNaviPaneDict[wb.Name].Visible = true;
+                SheetNaviPaneDict[workbook.Name].Visible = true;
+                SheetNaviObjDict[workbook.Name].RefreshSheetList();
+            }
+            else
+            {
+                ;    // false라고 해서 굳이 pane을 끄지는 않는다.
             }
         }
         #endregion Sheet Navigation
@@ -121,7 +118,7 @@ namespace AddIns
 
             // WorkbookOpen 이벤트에서는 excel만 실행시킨 경우에는 pane이 생성안됨
             // RibbonButton_Load 이벤트에서 excel만 실행시킨 경우 pane이 생성됨
-            CreateSheetNaviPane(Properties.Settings.Default.SheetNavi_AlwaysShow);
+            CreateSheetNaviPane(Properties.Settings.Default.SheetNavi_AlwaysShow, wb);
 
             pFuncRibonButtonEnDisable(0);
             SheetNaviObjDict[wb.Name].BtnEnDisableChk();
@@ -166,7 +163,6 @@ namespace AddIns
         {
         }
         #endregion Event Function
-
 
 
         #region VSTO에서 생성한 코드

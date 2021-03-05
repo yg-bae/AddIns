@@ -13,7 +13,8 @@ using Worksheet = Microsoft.Office.Interop.Excel.Worksheet;
 using ListObject = Microsoft.Office.Interop.Excel.ListObject;
 
 namespace AddIns
-{   public partial class SheetNavi : UserControl
+{
+    public partial class SheetNavi : UserControl
     {
         class SheetListItem : Dictionary<string, object>
         {
@@ -32,19 +33,16 @@ namespace AddIns
                 get => (Color?)this[ITM_FORE_COLOR];
                 set => this[ITM_BACK_COLOR] = value;
             }
-
             public Color? BackColor
             {
                 get => (Color?)this[ITM_BACK_COLOR];
                 set => this[ITM_BACK_COLOR] = (Color)value;
             }
-
             public string Note
             {
                 get => (this[ITM_NOTE] == null) ? null : this[ITM_NOTE].ToString();
                 set => this[ITM_NOTE] = value;
             }
-
             public SheetListItem(string item, Color? foreColor = null, Color? backColor = null, string note = null)
             {
                 this[ITM_NAME] = item;
@@ -54,6 +52,7 @@ namespace AddIns
             }
         };
 
+        #region Variables
         const string TIDX_TBL_NAME = "T_Index";
         const string TIDX_SHEET = "Sheet";
         const string TIDX_NOTE = "Note";
@@ -62,7 +61,9 @@ namespace AddIns
         private ListObject IndexTblObj;
         private Code.FrmOption Option;
         private BindingList<SheetListItem> SheetList = new BindingList<SheetListItem>();
+        #endregion Variables
 
+        #region Initialization
         public SheetNavi(Workbook wb)
         {
             InitializeComponent();
@@ -74,13 +75,14 @@ namespace AddIns
             CboSheetList.DataSource = SheetList;
             CboSheetList.DisplayMember = SheetListItem.ITM_NAME;
         }
+        #endregion Initialization
 
         #region Sheet Controllers
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
             RefreshSheetList();
         }
-        
+
         private void BtnPrev_Click(object sender, EventArgs e)
         {
             Globals.ThisAddIn.PrevSheet();
@@ -103,7 +105,7 @@ namespace AddIns
                 BtnNext.Enabled = false;
                 BtnNext.BackgroundImage = Properties.Resources.Arrow_Right_Gray;
             }
-                
+
             if (Globals.ThisAddIn.NumOfPrev > 0)
             {
                 BtnPrev.Enabled = true;
@@ -164,14 +166,14 @@ namespace AddIns
             {
                 int idxSheetName = GetColumnIdx(IndexTblObj, TIDX_SHEET);
                 int idxNote = GetColumnIdx(IndexTblObj, TIDX_NOTE);
-                if((idxSheetName != -1) && (idxNote != -1))
+                if ((idxSheetName != -1) && (idxNote != -1))
                 {
                     Excel.ListColumn listSheetNames = IndexTblObj.ListColumns[idxSheetName];
-                    for(int i = 1; i <= listSheetNames.DataBodyRange.Rows.Count; i++)
+                    for (int i = 1; i <= listSheetNames.DataBodyRange.Rows.Count; i++)
                     {
                         string sheetName = IndexTblObj.DataBodyRange[i, idxSheetName].Value;
                         string toolTip = IndexTblObj.DataBodyRange[i, idxNote].Value;
-                        
+
                         Color foreColor = System.Drawing.ColorTranslator.FromOle((int)((double)IndexTblObj.DataBodyRange[i, idxSheetName].Font.Color));
                         Color backColor = System.Drawing.ColorTranslator.FromOle((int)((double)IndexTblObj.DataBodyRange[i, idxSheetName].Interior.Color));
                         SheetList.Add(new SheetListItem(sheetName, foreColor, backColor, toolTip));
@@ -292,7 +294,7 @@ namespace AddIns
 
         private int GetColumnIdx(ListObject obj, string colName)
         {
-            foreach(Excel.ListColumn col in obj.ListColumns)
+            foreach (Excel.ListColumn col in obj.ListColumns)
             {
                 if (col.Name == colName)
                     return col.Index;
@@ -313,7 +315,7 @@ namespace AddIns
         #region Table Controllers
         private void BtnReleaseFilter_Click(object sender, EventArgs e)
         {
-             try
+            try
             {
                 Worksheet ws = Wb.ActiveSheet;
                 foreach (ListObject tbl in ws.ListObjects)
