@@ -22,6 +22,9 @@ namespace AddIns.Code
             ChkAlwaysShow.Checked = Properties.Settings.Default.SheetNavi_AlwaysShow;
             if (Properties.Settings.Default.SheetNavi_DockPosition == Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionLeft) RdoDockLeft.Checked = true;
             else RdoDockRight.Checked = true;
+
+            LblVersion.Text = "Ver." + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
         }
 
         private void BtnOk_Click(object sender, EventArgs e)

@@ -37,6 +37,7 @@ namespace AddIns.Code
             this.GrpOkCancel = new System.Windows.Forms.GroupBox();
             this.BtnOk = new System.Windows.Forms.Button();
             this.BtnCancel = new System.Windows.Forms.Button();
+            this.LblVersion = new System.Windows.Forms.Label();
             this.GrpDockPosition.SuspendLayout();
             this.GrpOkCancel.SuspendLayout();
             this.SuspendLayout();
@@ -128,6 +129,16 @@ namespace AddIns.Code
             this.BtnCancel.Text = "취소";
             this.BtnCancel.UseVisualStyleBackColor = true;
             // 
+            // LblVersion
+            // 
+            this.LblVersion.AutoSize = true;
+            this.LblVersion.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.LblVersion.Location = new System.Drawing.Point(0, 170);
+            this.LblVersion.Name = "LblVersion";
+            this.LblVersion.Size = new System.Drawing.Size(82, 12);
+            this.LblVersion.TabIndex = 9;
+            this.LblVersion.Text = "Ver.1.0.0.0000";
+            // 
             // FrmOption
             // 
             this.AcceptButton = this.BtnOk;
@@ -137,6 +148,7 @@ namespace AddIns.Code
             this.CancelButton = this.BtnCancel;
             this.ClientSize = new System.Drawing.Size(247, 224);
             this.ControlBox = false;
+            this.Controls.Add(this.LblVersion);
             this.Controls.Add(this.GrpOkCancel);
             this.Controls.Add(this.GrpDockPosition);
             this.Controls.Add(this.ChkAlwaysShow);
@@ -164,5 +176,6 @@ namespace AddIns.Code
         public System.Windows.Forms.RadioButton RdoDockRight;
         public System.Windows.Forms.RadioButton RdoDockLeft;
         private System.Windows.Forms.Label LblNote_Dock;
+        private System.Windows.Forms.Label LblVersion;
     }
 }
