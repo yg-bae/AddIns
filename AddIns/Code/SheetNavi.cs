@@ -228,6 +228,8 @@ namespace AddIns
 
         private void LstSheetList_DrawItem(object sender, DrawItemEventArgs e)
         {
+            if (e.Index == -1) return;
+
             Graphics g = e.Graphics;
             SheetListItem sheetListItem = LstSheetList.Items[e.Index] as SheetListItem;
             SolidBrush foregroundBrush = new SolidBrush((((e.State & DrawItemState.Selected) != DrawItemState.Selected) && (sheetListItem.ForeColor != null)) ? (Color)sheetListItem.ForeColor : e.ForeColor);
