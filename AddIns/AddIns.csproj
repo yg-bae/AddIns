@@ -181,6 +181,7 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="Code\CommonFunction.cs" />
     <Compile Include="Code\Option.cs">
       <SubType>Form</SubType>
     </Compile>

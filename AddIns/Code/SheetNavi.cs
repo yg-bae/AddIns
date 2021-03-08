@@ -12,6 +12,7 @@ using Workbook = Microsoft.Office.Interop.Excel.Workbook;
 using Worksheet = Microsoft.Office.Interop.Excel.Worksheet;
 using ListObject = Microsoft.Office.Interop.Excel.ListObject;
 
+
 namespace AddIns
 {
     public partial class SheetNavi : UserControl
@@ -70,14 +71,29 @@ namespace AddIns
             Wb = wb;
             Option = new Code.FrmOption();
 
-            LstSheetList.DataSource = SheetList;
-            LstSheetList.DisplayMember = SheetListItem.ITM_NAME;
-            CboSheetList.DataSource = SheetList;
-            CboSheetList.DisplayMember = SheetListItem.ITM_NAME;
+            SetSheetList(true);
+        }
+
+        private void SetSheetList(bool SetClear)
+        {
+            if(SetClear)
+            {
+                LstSheetList.DataSource = SheetList;
+                LstSheetList.DisplayMember = SheetListItem.ITM_NAME;
+                CboSheetList.DataSource = SheetList;
+                CboSheetList.DisplayMember = SheetListItem.ITM_NAME;
+            }
+            else
+            {
+                LstSheetList.DataSource = null;
+                LstSheetList.DisplayMember = "";
+                CboSheetList.DataSource = null;
+                CboSheetList.DisplayMember = "";
+            }
         }
         #endregion Initialization
 
-        #region Sheet Controllers
+        #region GrpSheetCtrl
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
             RefreshSheetList();
@@ -117,7 +133,7 @@ namespace AddIns
                 BtnPrev.BackgroundImage = Properties.Resources.Arrow_Left_Gray;
             }
         }
-        #endregion Sheet Controllers
+        #endregion GrpSheetCtrl
 
         #region Sheet List
         private void OpenSheet(SheetListItem selectedItem)
@@ -159,6 +175,7 @@ namespace AddIns
 
         public void RefreshSheetList()
         {
+            SetSheetList(false);
             SheetList.Clear();
 
             IndexTblObj = GetTblObj(TIDX_TBL_NAME);
@@ -193,6 +210,7 @@ namespace AddIns
                 {
                 }
             }
+            SetSheetList(true);
         }
 
         public void SelectItem(string itemName)
@@ -278,18 +296,17 @@ namespace AddIns
         #region Common Library
         private ListObject GetTblObj(string tblName)
         {
-            ListObject tblObj = null;
             foreach (Worksheet ws in Wb.Worksheets)
             {
                 try
                 {
-                    tblObj = ws.ListObjects[tblName];
+                    return ws.ListObjects[tblName];
                 }
                 catch (Exception)
                 {
                 }
             }
-            return tblObj;
+            return null;
         }
 
         private int GetColumnIdx(ListObject obj, string colName)

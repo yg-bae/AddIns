@@ -90,7 +90,6 @@ namespace AddIns
                 SheetNavi obj = new SheetNavi(workbook);
                 SheetNaviObjDict[workbook.Name] = obj;
                 SheetNaviObjDict[workbook.Name].BtnEnDisableChk();
-                SheetNaviObjDict[workbook.Name].RefreshSheetList();
 
                 SheetNaviPaneDict[workbook.Name] = CustomTaskPanes.Add(obj, "Sheet Navigation");
                 SheetNaviPaneDict[workbook.Name].DockPosition = Properties.Settings.Default.SheetNavi_DockPosition;
@@ -99,8 +98,8 @@ namespace AddIns
 
             if(ShowPane)
             {
-                SheetNaviPaneDict[workbook.Name].Visible = true;
                 SheetNaviObjDict[workbook.Name].RefreshSheetList();
+                SheetNaviPaneDict[workbook.Name].Visible = true;
             }
             else
             {
