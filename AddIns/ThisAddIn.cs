@@ -73,6 +73,14 @@ namespace AddIns
                 SheetHistoryDict_Next[wb.Name] = SheetOpenHistoryStack_Next;
             }
         }
+
+        private void DeleteSheetHistoryStack(Workbook wb)
+        {
+            if (SheetHistoryDict_Prev.ContainsKey(wb.Name)) 
+                SheetHistoryDict_Prev.Remove(wb.Name);
+            if (SheetHistoryDict_Next.ContainsKey(wb.Name))
+                SheetHistoryDict_Next.Remove(wb.Name);
+        }
         #endregion 이전 / 다음시트 선택기
 
 
@@ -83,7 +91,13 @@ namespace AddIns
 
         public void CreateSheetNaviPane(bool ShowPane, Workbook workbook = null)
         {
-            workbook = (workbook == null) ? Application.ActiveWorkbook : workbook;   
+            if (workbook == null)
+            {
+                if (Application.ActiveWorkbook != null)
+                    workbook = Application.ActiveWorkbook;
+                else
+                    return;
+            }
 
             if (!SheetNaviPaneDict.ContainsKey(workbook.Name))
             {
@@ -106,6 +120,21 @@ namespace AddIns
                 ;    // false라고 해서 굳이 pane을 끄지는 않는다.
             }
         }
+
+        public void DeleteSheetNaviPane(Workbook workbook = null)
+        {
+            if (SheetNaviObjDict.ContainsKey(workbook.Name))
+            {
+                SheetNaviObjDict[workbook.Name].Dispose();
+                SheetNaviObjDict.Remove(workbook.Name);
+            }
+
+            if (SheetNaviPaneDict.ContainsKey(workbook.Name))
+            {
+                SheetNaviPaneDict[workbook.Name].Dispose();
+                SheetNaviPaneDict.Remove(workbook.Name);
+            }
+        }
         #endregion Sheet Navigation
 
 
@@ -122,7 +151,12 @@ namespace AddIns
             pFuncRibonButtonEnDisable(0);
             SheetNaviObjDict[wb.Name].BtnEnDisableChk();
         }
-        
+        private void WorkbookBeforeClose(Excel.Workbook wb, ref bool cancel)
+        {
+            DeleteSheetHistoryStack(wb);
+            DeleteSheetNaviPane(wb);
+        }
+
         private void WorksheetActivate(object sh)
         {
             Worksheet sht = (Worksheet)sh;
@@ -154,6 +188,8 @@ namespace AddIns
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             Application.WorkbookOpen += WorkbookOpen;
+            Application.WorkbookBeforeClose += WorkbookBeforeClose;
+
             Application.SheetActivate += WorksheetActivate;
             Application.SheetDeactivate += WorksheetDeactivate;
         }
